@@ -13,5 +13,5 @@ Alumnos
 -------
 
 Leandro Lovisolo (LU 645/11) [leandro@leandro.me](mailto:leandro@leandro.me)  
-Lautaro José Petaccio  (LU 443/11) [lausuper@gmail.com](mailto:lausuper@gmail.com)
+Lautaro José Petaccio  (LU 443/11) [lausuper@gmail.com](mailto:lausuper@gmail.com)  
 Lucas Rossi (LU 705/11) [lucasrossi20@gmail.com](mailto:lucasrossi20@gmail.com)
