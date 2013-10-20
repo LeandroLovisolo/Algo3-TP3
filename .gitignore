@@ -1,0 +1,32 @@
+# Enunciado
+enunciado.pdf
+
+# Binarios
+/problema1
+/problema1_tests
+/problema1_perf
+/problema2
+/problema2_tests
+/problema2_perf
+/problema3
+/problema3_tests
+/problema3_perf
+
+# Código objeto
+*.o
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# LaTeX
+informe.pdf
+tex/*.pdf
+tex/*.aux
+tex/*.toc
+tex/*.log
+
+# Eclipse
+.cproject
+.project
+.settings
