@@ -22,7 +22,7 @@ int fronteraMaxima(vector<nodo> &nodos, vector<bool> &nodosUsados, vector<int> &
 			int fronteraTmp = fronteraMaxima(nodos, nodosUsados, cliqueTmp);
 			int nuevosEnFrontera = nodos[i].adyacentes.size();
 			if(clique.size() != 1) {
-				nuevosEnFrontera -= clique.size();
+				nuevosEnFrontera -= 2*clique.size();
 			}
 			frontera = max(fronteraTmp + nuevosEnFrontera, frontera);
 		}
