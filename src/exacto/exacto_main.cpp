@@ -50,13 +50,14 @@ int main()
     	nodosUsados.resize(nodos.size(), false);
     	vector<int> clique;
         vector<int> res;
-    	cout << fronteraMaxima(nodos, nodosUsados, clique, res);
+    	cout << fronteraMaxima(nodos, nodosUsados, clique/*, res*/);
+        /*
         cout << " " << res.size();
         for (unsigned i = 0; i < res.size(); ++i) {
             cout << " " << res[i]+1;
         }
         cout << endl;
-
+        */
     }
 
     return 0;
