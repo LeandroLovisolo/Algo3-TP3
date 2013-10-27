@@ -1,13 +1,7 @@
 #include <iostream>
-#include <vector>
-#include <set>
-#include <algorithm>
+#include "exacto.h"
 
 using namespace std;
-
-struct nodo{
-	set<int> adyacentes;
-};
 
 bool parteDelClique(vector<int> &clique, vector<nodo> &nodos, int nodoActual) {
 	for (unsigned i = 0; i < clique.size(); ++i) {
@@ -39,9 +33,9 @@ int fronteraMaxima(vector<nodo> &nodos, vector<bool> &nodosUsados, vector<int> &
 
 
 
-int main () {
+/*int main () {
 	vector<nodo> nodos;
-	/* Ejemplo 1, res -> 4
+	 Ejemplo 1, res -> 4
 	nodo v1;
 	v1.adyacentes.insert(2);
 	v1.adyacentes.insert(3);
@@ -63,7 +57,6 @@ int main () {
 	nodos.push_back(v4);
 	nodos.push_back(v5);
 
-	*/
 	//Ejemplo 2, res -> 5
 	nodo v1;
 	v1.adyacentes.insert(3);
@@ -96,3 +89,4 @@ int main () {
 	vector<int> clique;
 	cout << "Frontera max " << fronteraMaxima(nodos, nodosUsados, clique) << endl;
 }
+	*/
