@@ -14,7 +14,7 @@ int main() {
         // Leo la cantidad de aristas.
 		unsigned m;
 		cin >> m;
-
+		if(cin.eof()) break;
         // Ignoro el resto de la línea.
 		string s;
 		getline(cin, s);
@@ -35,10 +35,10 @@ int main() {
 			nodos[i].numero = i;
 		}
 		pair<int, vector<int> > res = golosa(nodos);
-		cout << "Frontera: " << res.first << endl;
-		cout << "Res:" << endl;
+		cout << res.first << " " << res.second.size() << " ";
 		for (unsigned i = 0; i < res.second.size(); ++i) {
-			cout << "," << res.second[i]+1;
+			cout << res.second[i]+1;
+			if(i + 1 < res.second.size()) cout << " ";
 		}
 		cout << endl;
 	}

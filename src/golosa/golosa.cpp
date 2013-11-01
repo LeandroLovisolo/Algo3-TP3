@@ -29,12 +29,6 @@ int enFrontera(set<int> &frontera, nodo &n) {
 	}
 	return cantidad;
 }
-//Agrega los adyacentes del nodo a la frontera, solo si no existían antes
-void agregarAFrontera(set<int> &frontera, nodo &n) {
-	for(set<int>::iterator it=n.adyacentes.begin(); it!=n.adyacentes.end(); ++it) {
-		if(frontera.find(*it) == frontera.end()) frontera.insert(*it);
-	}
-}
 
 //La idea es, me paro en el nodo de máxima adyacencia, lo agrego y me voy moviendo en nodos que me aporten más
 //elementos a mi frontera
@@ -42,18 +36,13 @@ pair<int, vector<int> > golosa(vector<nodo> &nodos) {
 	//Consigo el nodo con más adyacentes
 	vector<nodo>::iterator result = max_element(nodos.begin(), nodos.end(), compare);
 	int actual = result->numero;
-	set<int> c_frontera;
-	//Agrego el vértice actual a la frontera para que no se tome como
-	// uno más de la frontera al elegir el nuevo adyacente
-	c_frontera.insert(actual);
+	int frontera = nodos[actual].adyacentes.size();
 	vector<int> resultado;
 	bool cambio = true;
 	while(cambio == true) {
-		int maxFrontera = 0; //Guarda la frontera máxima de los adyacentes
-	 	int maxAdyacente; //Guarda el índice del adyacente de frontera máxima
+		int maxFronteraLocal = 0; //Guarda la frontera máxima de los adyacentes
+	 	int maxAdyacenteLocal; //Guarda el índice del adyacente de frontera máxima
 	 	resultado.push_back(actual); //Guardo en el resultado el vértice actual
-	 	//Agrego los adyacentes del nodo actual a la frontera
-	 	agregarAFrontera(c_frontera, nodos[actual]);
 	 	//Veo si la frontera me incrementó, si no incrementó, no cambio nada y termino
 	 	cambio = false;
 	 	//Recorro los adyacentes para ver cuál elegir
@@ -62,16 +51,17 @@ pair<int, vector<int> > golosa(vector<nodo> &nodos) {
 	 		if(parteDelClique(resultado, nodos, *it)) {
 	 			//Si pertenece al clique, checkeo cuanto aportaría a la frontera
 	 			//Solo me quedo con el que me aporte una cantidad máxima
-	 			int nuevaFrontera = enFrontera(c_frontera, nodos[*it]);
-	 			if (nuevaFrontera > maxFrontera) {
-	 				maxFrontera = nuevaFrontera;
-	 				maxAdyacente = nodos[*it].numero;
+	 			int nuevaFronteraLocal = nodos[*it].adyacentes.size() - resultado.size() -1;
+	 			if (nuevaFronteraLocal > maxFronteraLocal) {
+	 				maxFronteraLocal = nuevaFronteraLocal;
+	 				maxAdyacenteLocal = nodos[*it].numero;
 	 				cambio = true;
 	 			}
 	 		}
 	 	}
-	 	actual = maxAdyacente;
+	 	actual = maxAdyacenteLocal;
+	 	frontera += maxFronteraLocal;
 	 	if(!cambio) break;
 	}
-	return make_pair(c_frontera.size() - resultado.size(), resultado);
+	return make_pair(frontera, resultado);
 }
