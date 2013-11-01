@@ -11,6 +11,15 @@ static bool compare(nodo &a, nodo &b) {
     return a.adyacentes.size() < b.adyacentes.size();
 }
 
+bool parteDelClique(vector<int> &clique, vector<nodo> &nodos, int nodoActual) {
+	for (unsigned i = 0; i < clique.size(); ++i) {
+		if(nodos[clique[i]].adyacentes.find(nodoActual) == nodos[clique[i]].adyacentes.end()) {
+			return false;
+		}
+	}
+	return true;
+}
+
 //Cantidad de elementos aportados a la frontera
 int enFrontera(set<int> &frontera, nodo &n) {
 	int cantidad = 0;
@@ -20,13 +29,15 @@ int enFrontera(set<int> &frontera, nodo &n) {
 	}
 	return cantidad;
 }
-
+//Agrega los adyacentes del nodo a la frontera, solo si no existían antes
 void agregarAFrontera(set<int> &frontera, nodo &n) {
 	for(set<int>::iterator it=n.adyacentes.begin(); it!=n.adyacentes.end(); ++it) {
 		if(frontera.find(*it) == frontera.end()) frontera.insert(*it);
 	}
 }
 
+//La idea es, me paro en el nodo de máxima adyacencia, lo agrego y me voy moviendo en nodos que me aporten más
+//elementos a mi frontera
 pair<int, vector<int> > golosa(vector<nodo> &nodos) {
 	//Consigo el nodo con más adyacentes
 	vector<nodo>::iterator result = max_element(nodos.begin(), nodos.end(), compare);
@@ -47,14 +58,10 @@ pair<int, vector<int> > golosa(vector<nodo> &nodos) {
 	 	cambio = false;
 	 	//Recorro los adyacentes para ver cuál elegir
 	 	for (set<int>::iterator it=nodos[actual].adyacentes.begin(); it!=nodos[actual].adyacentes.end(); ++it) {
-	 		bool perteneceAClique = true;
-	 		for (unsigned j = 0; j < resultado.size(); ++j) {
-	 			if(nodos[*it].adyacentes.find(resultado[j]) == nodos[*it].adyacentes.end()) {
-	 				perteneceAClique = false;
-	 				break;
-	 			}
-	 		}
-	 		if(perteneceAClique) {
+	 		//Checkeo que pertenezcan al clique, es decir, que sea adyacente a todos los elementos del clique
+	 		if(parteDelClique(resultado, nodos, *it)) {
+	 			//Si pertenece al clique, checkeo cuanto aportaría a la frontera
+	 			//Solo me quedo con el que me aporte una cantidad máxima
 	 			int nuevaFrontera = enFrontera(c_frontera, nodos[*it]);
 	 			if (nuevaFrontera > maxFrontera) {
 	 				maxFrontera = nuevaFrontera;
