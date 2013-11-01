@@ -3,6 +3,7 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 
@@ -18,6 +19,16 @@ bool parteDelClique(vector<int> &clique, vector<nodo> &nodos, int nodoActual) {
 		}
 	}
 	return true;
+}
+
+bool enElclique(vector<int> &clique, int pos) {
+	for (unsigned i = 0; i < clique.size(); ++i) {
+		if(clique[i] == pos) {
+			cout << "Esta en el clique" << endl;
+			return true;	
+		} 
+	}
+	return false;
 }
 
 //Cantidad de elementos aportados a la frontera
@@ -36,7 +47,7 @@ pair<int, vector<int> > golosa(vector<nodo> &nodos) {
 	//Consigo el nodo con más adyacentes
 	vector<nodo>::iterator result = max_element(nodos.begin(), nodos.end(), compare);
 	int actual = result->numero;
-	int frontera = nodos[actual].adyacentes.size();
+	int frontera = 0;
 	vector<int> resultado;
 	bool cambio = true;
 	while(cambio == true) {
@@ -48,20 +59,23 @@ pair<int, vector<int> > golosa(vector<nodo> &nodos) {
 	 	//Recorro los adyacentes para ver cuál elegir
 	 	for (set<int>::iterator it=nodos[actual].adyacentes.begin(); it!=nodos[actual].adyacentes.end(); ++it) {
 	 		//Checkeo que pertenezcan al clique, es decir, que sea adyacente a todos los elementos del clique
-	 		if(parteDelClique(resultado, nodos, *it)) {
+	 		if(parteDelClique(resultado, nodos, *it) && !enElclique(resultado, *it)) {
 	 			//Si pertenece al clique, checkeo cuanto aportaría a la frontera
 	 			//Solo me quedo con el que me aporte una cantidad máxima
-	 			int nuevaFronteraLocal = nodos[*it].adyacentes.size() - resultado.size() -1;
+	 			int nuevaFronteraLocal = nodos[*it].adyacentes.size() - resultado.size();
 	 			if (nuevaFronteraLocal > maxFronteraLocal) {
 	 				maxFronteraLocal = nuevaFronteraLocal;
-	 				maxAdyacenteLocal = nodos[*it].numero;
+	 				maxAdyacenteLocal = *it;
 	 				cambio = true;
 	 			}
 	 		}
 	 	}
 	 	actual = maxAdyacenteLocal;
-	 	frontera += maxFronteraLocal;
 	 	if(!cambio) break;
 	}
+ 	for (unsigned i = 0; i < resultado.size(); ++i) {
+ 		frontera += nodos[resultado[i]].adyacentes.size();
+ 	}
+ 	frontera -= (resultado.size()-1)*resultado.size();
 	return make_pair(frontera, resultado);
 }
