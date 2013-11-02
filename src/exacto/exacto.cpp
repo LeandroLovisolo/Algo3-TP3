@@ -1,5 +1,11 @@
 #include <iostream>
 #include "exacto.h"
+#include <utility>
+#include <tuple>
+
+#define tam_frontera(e) get<0>(e)
+#define clique(e) get<1>(e)
+#define c_frontera(e) get<2>(e)
 
 using namespace std;
 
@@ -12,81 +18,51 @@ bool parteDelClique(vector<int> &clique, vector<nodo> &nodos, int nodoActual) {
 	return true;
 }
 
-int fronteraMaxima(vector<nodo> &nodos, vector<bool> &nodosUsados, vector<int> &clique) {
-	int frontera = 0;
-	for (unsigned i = 0; i < nodosUsados.size(); ++i) {
-		if(!nodosUsados[i] && parteDelClique(clique, nodos, i)) {
-			nodosUsados[i] = true;
-			vector<int> cliqueTmp(clique);
-			cliqueTmp.push_back(i);
-			int fronteraTmp = fronteraMaxima(nodos, nodosUsados, cliqueTmp);
-			int nuevosEnFrontera = nodos[i].adyacentes.size();
-			if(clique.size() != 1) {
-				nuevosEnFrontera -= 2*clique.size();
-			}
-			frontera = max(fronteraTmp + nuevosEnFrontera, frontera);
+void printClique(vector<int> &clique) {
+	cout << "Clique" << endl;
+	cout << "[";
+	for (unsigned i = 0; i < clique.size(); ++i) {
+		cout << clique[i];
+		if(i + 1 < clique.size()) {
+			cout << ",";
 		}
 	}
-	return frontera;
-
+	cout << "]" << endl;
 }
 
+pair<int,vector<int> > fronteraMaxima(vector<nodo> &nodos, vector<int> &clique, unsigned pos) {
+	if(pos == nodos.size()) return make_pair(0, vector<int>());
+	int fronteraMax = 0;
+	vector<int> *maxClique = 0;
+	for (unsigned i = pos; i < nodos.size(); ++i) {
+		if(parteDelClique(clique, nodos, i)) {
+			vector<int> cliqueTmp(clique);
+			cliqueTmp.push_back(i);
+			pair<int, vector<int> > fronteraRec = fronteraMaxima(nodos, cliqueTmp, pos + 1);
+			int tmpFrontera = 0;
+			for (unsigned j = 0; j < cliqueTmp.size(); ++j) {
+				tmpFrontera += nodos[cliqueTmp[j]].adyacentes.size();
+			}
+			tmpFrontera -= (cliqueTmp.size()-1)*cliqueTmp.size();
+			if(max(tmpFrontera, fronteraRec.first) > fronteraMax) {
+				fronteraMax = max(tmpFrontera, fronteraRec.first);
+				if(maxClique != 0) delete maxClique;
+				if(tmpFrontera > fronteraRec.first) {
+					maxClique = new vector<int>(cliqueTmp);
+				}
+				else {
+					maxClique = new vector<int>(fronteraRec.second);
+				}
+			}
+		}
+	}
+	if(maxClique == 0) {
+		return make_pair(fronteraMax, vector<int>());
+	}
+	else {
+		vector<int> res(*maxClique);
+		delete maxClique;
+		return make_pair(fronteraMax, res);
+	}
 
-
-/*int main () {
-	vector<nodo> nodos;
-	 Ejemplo 1, res -> 4
-	nodo v1;
-	v1.adyacentes.insert(2);
-	v1.adyacentes.insert(3);
-	nodo v2;
-	v2.adyacentes.insert(1);
-	v2.adyacentes.insert(3);
-	nodo v3;
-	v3.adyacentes.insert(2);
-	v3.adyacentes.insert(1);
-	nodo v4;
-	v4.adyacentes.insert(3);
-	v4.adyacentes.insert(5);
-	nodo v5;
-	v5.adyacentes.insert(3);
-	v5.adyacentes.insert(4);
-	nodos.push_back(v1);
-	nodos.push_back(v2);
-	nodos.push_back(v3);
-	nodos.push_back(v4);
-	nodos.push_back(v5);
-
-	//Ejemplo 2, res -> 5
-	nodo v1;
-	v1.adyacentes.insert(3);
-	nodo v2;
-	v2.adyacentes.insert(3);
-	nodo v3;
-	v3.adyacentes.insert(1);
-	v3.adyacentes.insert(2);
-	v3.adyacentes.insert(4);
-	nodo v4;
-	v4.adyacentes.insert(3);
-	v4.adyacentes.insert(5);
-	v4.adyacentes.insert(6);
-	v4.adyacentes.insert(7);
-	nodo v5;
-	v5.adyacentes.insert(4);
-	nodo v6;
-	v6.adyacentes.insert(4);
-	nodo v7;
-	v7.adyacentes.insert(4);
-	nodos.push_back(v1);
-	nodos.push_back(v2);
-	nodos.push_back(v3);
-	nodos.push_back(v4);
-	nodos.push_back(v5);
-	nodos.push_back(v6);
-	nodos.push_back(v7);
-	vector<bool> nodosUsados;
-	nodosUsados.resize(nodos.size(), false);
-	vector<int> clique;
-	cout << "Frontera max " << fronteraMaxima(nodos, nodosUsados, clique) << endl;
 }
-	*/

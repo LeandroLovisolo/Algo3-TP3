@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <tuple>
 #include "exacto.h"
 
 using namespace std;
@@ -15,7 +17,7 @@ int main()
         // Leo la cantidad de aristas.
         unsigned m;
         cin >> m;
-
+        if(cin.eof()) break;
         // Ignoro el resto de la línea.
         string s;
         getline(cin, s);
@@ -45,19 +47,15 @@ int main()
                 }
             }
         #endif
-
-        vector<bool> nodosUsados;
-    	nodosUsados.resize(nodos.size(), false);
     	vector<int> clique;
-        vector<int> res;
-    	cout << fronteraMaxima(nodos, nodosUsados, clique/*, res*/);
-        /*
-        cout << " " << res.size();
-        for (unsigned i = 0; i < res.size(); ++i) {
-            cout << " " << res[i]+1;
+        pair<int, vector<int> > res = fronteraMaxima(nodos, clique, 0);
+        cout << res.first << " " << res.second.size() << " ";
+        for (unsigned i = 0; i < res.second.size(); ++i) {
+            cout << res.second[i]+1;
+            if(i + 1 < res.second.size()) cout << " ";
         }
         cout << endl;
-        */
+
     }
 
     return 0;
