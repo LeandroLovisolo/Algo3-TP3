@@ -11,7 +11,7 @@ using namespace std;
 static bool compare(nodo &a, nodo &b) {
     return a.adyacentes.size() < b.adyacentes.size();
 }
-
+//Puede pertenecer el nodo actual al clique?
 bool parteDelClique(vector<int> &clique, vector<nodo> &nodos, int nodoActual) {
 	for (unsigned i = 0; i < clique.size(); ++i) {
 		if(nodos[clique[i]].adyacentes.find(nodoActual) == nodos[clique[i]].adyacentes.end()) {
@@ -20,25 +20,14 @@ bool parteDelClique(vector<int> &clique, vector<nodo> &nodos, int nodoActual) {
 	}
 	return true;
 }
-
+//Me fijo si ese adyacente ya estaba en el clique
 bool enElclique(vector<int> &clique, int pos) {
 	for (unsigned i = 0; i < clique.size(); ++i) {
 		if(clique[i] == pos) {
-			cout << "Esta en el clique" << endl;
 			return true;	
 		} 
 	}
 	return false;
-}
-
-//Cantidad de elementos aportados a la frontera
-int enFrontera(set<int> &frontera, nodo &n) {
-	int cantidad = 0;
-	for(set<int>::iterator it=n.adyacentes.begin(); it!=n.adyacentes.end(); ++it) {
-		//Si no está en la frontera, aporta uno más a la frontera
-		if(frontera.find(*it) == frontera.end()) ++cantidad;
-	}
-	return cantidad;
 }
 
 //La idea es, me paro en el nodo de máxima adyacencia, lo agrego y me voy moviendo en nodos que me aporten más
