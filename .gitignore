@@ -2,15 +2,10 @@
 enunciado.pdf
 
 # Binarios
-/problema1
-/problema1_tests
-/problema1_perf
-/problema2
-/problema2_tests
-/problema2_perf
-/problema3
-/problema3_tests
-/problema3_perf
+exacto
+golosa
+local
+tabu
 
 # Código objeto
 *.o
@@ -30,3 +25,6 @@ tex/*.log
 .cproject
 .project
 .settings
+
+# Casos de prueba
+testing

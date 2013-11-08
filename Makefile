@@ -74,7 +74,7 @@ golosa_main.o: src/golosa/golosa.h src/golosa/golosa_main.cpp
 # Problema 3                                                                  #
 ###############################################################################
 
-local: local.o local_main.o
+local: local.o local_main.o golosa.o
 	$(BIN_MAIN)
 
 local.o: src/local/local.cpp src/local/local.h
