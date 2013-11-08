@@ -2,10 +2,10 @@
 enunciado.pdf
 
 # Binarios
-exacto
-golosa
-local
-tabu
+/exacto
+/golosa
+/local
+/tabu
 
 # Código objeto
 *.o
