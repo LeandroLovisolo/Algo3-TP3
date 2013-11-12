@@ -7,10 +7,10 @@
 
 using namespace std;
 
-
 static bool compare(nodo &a, nodo &b) {
     return a.adyacentes.size() < b.adyacentes.size();
 }
+
 //Puede pertenecer el nodo actual al clique?
 bool parteDelClique(vector<int> &clique, vector<nodo> &nodos, int nodoActual) {
 	for (unsigned i = 0; i < clique.size(); ++i) {

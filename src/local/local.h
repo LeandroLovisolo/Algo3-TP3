@@ -4,14 +4,9 @@
 #include <set>
 #include <vector>
 #include <utility>
+#include "../common/common.h"
 
 using namespace std;
-
-struct nodo{
-	int numero;
-	set<int> adyacentes;
-};
-
 
 pair<int, vector<int> > local(vector<nodo> &nodos, vector<int> solucionInicial);
 

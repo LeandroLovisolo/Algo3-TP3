@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "local.h"
-//Incluir golosa
+#include "../golosa/golosa.h"
 
 using namespace std;
 
@@ -33,7 +33,7 @@ int main() {
             // Ignoro el resto de la línea.
 			getline(cin, s);
 		}
-		/*
+
 		pair<int, vector<int> > resGolosa = golosa(nodos);
 		pair<int, vector<int> > res = local(nodos, resGolosa.second);
 		cout << res.first << " " << res.second.size() << " ";
@@ -42,7 +42,6 @@ int main() {
 			if(i + 1 < res.second.size()) cout << " ";
 		}
 		cout << endl;
-		*/
 	}
 	return 0;
 }

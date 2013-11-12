@@ -4,13 +4,9 @@
 #include <set>
 #include <utility>
 #include <vector>
+#include "../common/common.h"
 
 using namespace std;
-
-struct nodo{
-	int numero;
-	set<int> adyacentes;
-};
 
 pair<int, vector<int> > golosa(vector<nodo> &nodos);
 
