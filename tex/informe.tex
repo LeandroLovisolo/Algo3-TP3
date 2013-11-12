@@ -282,6 +282,7 @@ Para la implementación del algoritmo exacto utilizamos la técnica de backtrack
 \newpage
 
 \section{Heurística contructiva golosa}
+\subsection{Algoritmo}
 La implementación realizada para resolver el problema con una heurística golosa realiza los siguientes procedimientos:
 \begin{enumerate}
 \item Elijo el nodo de grado máximo que sera la clique de tamaño 1 donde empezara el algoritmo. Marco como actual el nodo inicial.
@@ -335,6 +336,21 @@ A continuación presentamos el pseudocódigo:
 
 \end{pseudo}
 
+\subsection{Complejidad}
+Sea N cantidad de nodos en el grafo.
+
+En la función enElClique se tiene un ciclo de a lo sumo N veces (máximo clique), realizando operaciones O(1), por lo que la función tiene una complejidad de O(N).
+
+En el algoritmo goloso, se cicla hasta que cambio sea igual a true. Como el algoritmo solo puede agregar nodos nuevos al clique, se ciclaran a lo sumo N veces.
+Dentro del ciclo del while se tiene un for que recorre todos los adyacentes del nodo que a lo sumo puede tener a todos los nodos del grafo como adyacentes, por lo que se cicla N veces.
+La complejidad ambos ciclos es N * N * O(N*log N) $\subset$ O($N^3$ * log N).
+Para finalizar, tiene un for que cicla a lo sumo N veces realizando operaciones O(1).
+La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N).
+
+\subsection{Análisis de eficacia}
+Debido a que el algoritmo utiliza siempre el nodo de mayor adyacencia para buscar el próximo nodo que agregar al clique, este puede terminar agregando nodos que lleven a otros nodos con adyacencias mucho menores que otros nodos de menor adyacencia inicial, obteniendo una frontera de menor tamaño.
+
+\subsection{Performance}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Heurística de búsqueda local                                              %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
