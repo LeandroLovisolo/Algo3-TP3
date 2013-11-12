@@ -215,7 +215,64 @@ Sin más, presentamos los problemas estudiados a continuación.
 
 \section{Algoritmo exacto}
 
+Para la implementación del algoritmo exacto utilizamos la técnica de backtracking que puede verse a continuación.
 
+\begin{pseudo}
+
+\State nodo es tupla $<$ adyacentes : conjunto de int, numero : int $>$
+\State
+\Procedure{parteDelClique}{vector de int \&clique, vector de nodo \&nodos, int nodoActual} $\rightarrow$ bool
+	\For{i = 0 To Tamaño(clique) - 1}
+		\If{!nodos[clique[i]].adyacentes.Pertenece?(nodoActual)}								\Ode{log n}
+			\State return false
+		\EndIf
+	\EndFor
+	\State return true
+\EndProcedure
+
+\State
+\Procedure{frontera}{vector de nodo \&nodos, vector de int \&clique} $\rightarrow$ int 
+	\State size : int $\leftarrow$ 0
+	\For{i = 0 To Tamaño(clique) - 1}
+		\State size $\leftarrow$ size + Tamaño(nodos[clique[i]].adyacentes)				\Ode{1}
+	\EndFor
+	\State size $\leftarrow$ size - (Tamaño(clique)-1) * Tamaño(clique)				\Ode{1}
+	\State return size;
+\EndProcedure
+
+\State
+\Procedure{fronteraMaxima}{vector de nodo \&nodos, vector de int \&clique, unsigned pos} $\rightarrow$ tupla $<$ int , vector de int $>$
+
+	\If{pos == Tamaño(nodos)} return tupla $<$ 0, vector de int vacio $>$ \EndIf
+	\State fronteraMax : int $\leftarrow$ 0; \Comment{Guarda la frontera máxima}
+	\State vector de int *maxClique $\leftarrow$ 0; \Comment{Guarda el clique máximo}
+	\For{i = pos To Tamaño(nodos)}
+		\If{parteDelClique(clique, nodos, i)}															\Ode{N*log N}
+			\State vector de int cliqueTmp $\leftarrow$ Copia(clique)						\Ode{N}
+			\State cliqueTmp.Agregar(i)																			\Ode{1}
+			\State fronteraRec : tupla $<$ int, vector de int $>$ $\leftarrow$ fronteraMaxima(nodos, cliqueTmp, i + 1)
+			\State tmpFrontera : int $\leftarrow$ frontera(nodos, cliqueTmp)		\Ode{N}
+			\If{max(tmpFrontera, fronteraRec.first) $>$ fronteraMax}						\Ode{1}
+				\State fronteraMax $\leftarrow$ max(tmpFrontera, fronteraRec.first)	\Ode{1}
+				\If{maxClique != 0} delete maxClique \EndIf												\Ode{1}
+				\If{tmpFrontera > fronteraRec.first}															\Ode{1}
+					\State maxClique : vector de int $\leftarrow$ Copia(cliqueTmp)		\Ode{N}
+				\Else
+					\State maxClique : vector de int $\leftarrow$ Copia(fronteraRec.second) \Ode{N}
+				\EndIf
+			\EndIf
+		\EndIf
+	\EndFor
+	\If{maxClique == 0}																								\Ode{1}
+		\State return tupla $<$ fronteraMax, vector de int vacio $>$					\Ode{1}
+	\Else
+		 \State res : vector de int $\leftarrow$ Copia(*maxClique)						\Ode{N}
+		\State delete maxClique																					\Ode{1}
+		\State return tupla $<$ fronteraMax, res $>$
+	\EndIf
+
+\EndProcedure
+\end{pseudo}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Heurística contructiva golosa                                             %%
