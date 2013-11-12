@@ -282,8 +282,58 @@ Para la implementación del algoritmo exacto utilizamos la técnica de backtrack
 \newpage
 
 \section{Heurística contructiva golosa}
+La implementación realizada para resolver el problema con una heurística golosa realiza los siguientes procedimientos:
+\begin{enumerate}
+\item Elijo el nodo de grado máximo que sera la clique de tamaño 1 donde empezara el algoritmo. Marco como actual el nodo inicial.
+\item Para el nodo actual, recorro sus adyacentes y calculo cuanto aportaría a la frontera agregar ese adyacente si es posible agregarlo al clique.
+\item Agrego al clique el máximo de todos los adyacentes vistos y lo elijo como el actual.
+\item Vuelvo al punto 2 hasta que no haya adyacente que mejore la frontera.
+\end{enumerate}
 
+A continuación presentamos el pseudocódigo:
 
+\begin{pseudo}
+\Procedure{enElclique}{vector de int \&clique, int pos} $\rightarrow$ bool
+	\For{i = 0 To Tamaño(clique) - 1}
+		\If{clique[i] == pos}																									\Ode{1}
+			\State return true
+		\EndIf
+	\EndFor
+	\State return false
+\EndProcedure
+\State
+\Procedure{golosa}{vector de nodo \&nodos} $\leftarrow$ tupla $<$ int, vector de int $>$
+	\State actual : int $\leftarrow$ NodoDeMaximaAdyacencia(nodos)									\Ode{N}
+	\State frontera : int $\leftarrow$ 0																					\Ode{1}
+	\State resultado : vector de int																						\Ode{1}
+	\State cambio : cambio $\leftarrow$ true																			\Ode{1}
+	\While{cambio == true}
+		\State maxFronteraLocal : int $\leftarrow$ 0 \Comment{Guarda la frontera máxima de los adyacentes} \Ode{1}
+	 	\State maxAdyacenteLocal : int \Comment{Guarda el índice del adyacente de frontera máxima} \Ode{1}
+	 	\State resultado.Agregar(actual); \Comment{Guardo en el resultado el vértice actual} \Ode{1}
+	 	\State cambio $\leftarrow$ false;
+	 	
+	 	\For{it : iterador dameUno(nodos[actual].adyacentes) To último elemento}
+	 		\If{parteDelClique(resultado, nodos, it) AND !enElclique(resultado, it)} \Ode{N*log N}
+	 			\State nuevaFronteraLocal : int $\leftarrow$ Tamaño(nodos[*it].adyacentes) - Tamaño(resultado) 																													\Ode{1}
+	 			\If{nuevaFronteraLocal $>$ maxFronteraLocal}													\Ode{1}
+	 				\State maxFronteraLocal $\leftarrow$ nuevaFronteraLocal							\Ode{1}
+	 				\State maxAdyacenteLocal = *it																		\Ode{1}
+	 				\State cambio = true;																						\Ode{1}
+	 			\EndIf
+	 		\EndIf
+	 	\EndFor
+	 	\State actual $\leftarrow$ maxAdyacenteLocal															\Ode{1}
+	 	\If{!cambio} break \EndIf																								\Ode{1}
+	\EndWhile
+ 	\For{i = 0 To Tamaño(resultado - 1}
+ 		\State frontera $\leftarrow$ frontera + Tamaño(nodos[resultado[i]].adyacentes)	\Ode{1}
+ 	\EndFor
+ 	\State frontera $\leftarrow$ frontera - (Tamaño(resultado) - 1) * Tamaño(resultado \Ode{1}
+	\State return tupla $<$ frontera, resultado $>$
+\EndProcedure
+
+\end{pseudo}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Heurística de búsqueda local                                              %%
