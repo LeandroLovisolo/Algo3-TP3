@@ -42,6 +42,11 @@ pair<int, vector<int> > local(vector<nodo> &nodos, vector<int> solucionInicial) 
 	//Supongo que la vencidad es la misma solución excepto por un elemento cambiado
 
 	while(true) {
+		cout << "Solucion al inicio del while" << endl;
+		for (unsigned i = 0; i < solucionInicial.size(); ++i) {
+			cout << solucionInicial[i] << " ";
+		}
+		cout << endl;
 		operacion op;
 		int nodoAfectado;
 		int nodoAdicional;
@@ -50,7 +55,7 @@ pair<int, vector<int> > local(vector<nodo> &nodos, vector<int> solucionInicial) 
 		// Operación AGREGAR
 		for (unsigned i = 0; i < nodos.size(); ++i) {
 			if(!estaEnLaClique(i, solucionInicial) && agregandoSigueSiendoClique(solucionInicial, nodos, i)) {
-				int aporte = nodos[i].adyacentes.size() - solucionInicial.size() -1;
+				int aporte = nodos[i].adyacentes.size() - 2 * solucionInicial.size();
 				if(aporte > aporteAFrontera) {
 					op = AGREGAR;
 					nodoAfectado = i;
@@ -58,15 +63,15 @@ pair<int, vector<int> > local(vector<nodo> &nodos, vector<int> solucionInicial) 
 				}
 			}
 		}
-
+		cout << "aporteAFrontera despues de agregar " << aporteAFrontera << endl;
 		// Operación INTERCAMBIAR
 		for (unsigned i = 0; i < solucionInicial.size(); ++i) {
 			//Calculamos cuánto aporta i a la frontera
-			int aportaI = nodos[solucionInicial[i]].adyacentes.size() - solucionInicial.size() - 1;
+			int aportaI = nodos[solucionInicial[i]].adyacentes.size() - (solucionInicial.size() - 1);
 			for (unsigned j = 0; j < nodos.size(); ++j) {
 				//No tiene sentido intercambiar por el mismo
 				if(!estaEnLaClique(j, solucionInicial) && intercambiandoSigueSiendoClique(solucionInicial, nodos, i, j)) {
-					int aportaJ = nodos[j].adyacentes.size() - solucionInicial.size() - 1;
+					int aportaJ = nodos[j].adyacentes.size() - (solucionInicial.size() - 1);
 					if((aportaJ - aportaI) > aporteAFrontera) {
 						aporteAFrontera = (aportaJ - aportaI);
 						op = INTERCAMBIAR;
@@ -77,6 +82,7 @@ pair<int, vector<int> > local(vector<nodo> &nodos, vector<int> solucionInicial) 
 			}
 		}
 
+		cout << "aporteAFrontera despues de intercambiar " << aporteAFrontera << endl;
 		// Operación ELIMINAR
 		for (unsigned i = 0; i < solucionInicial.size(); ++i) {
 
@@ -90,7 +96,7 @@ pair<int, vector<int> > local(vector<nodo> &nodos, vector<int> solucionInicial) 
 				aporteAFrontera = nuevoAporteAFrontera;
 			}
 		}
-
+		cout << "aporteAFrontera despues de eliminar " << aporteAFrontera << endl;
 		if(aporteAFrontera == 0) break;
 
 		switch(op) {
