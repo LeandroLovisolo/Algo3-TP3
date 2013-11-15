@@ -8,6 +8,6 @@
 
 using namespace std;
 
-pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, unsigned movimientosTabu);
+pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, unsigned movimientosTabu, unsigned tamTabu);
 
 #endif // TABU_H
