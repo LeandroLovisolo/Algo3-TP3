@@ -43,18 +43,26 @@ bool intercambiandoSigueSiendoClique(vector<int> &clique, vector<nodo> &nodos, i
 enum operacion { AGREGAR, ELIMINAR, INTERCAMBIAR };
 
 pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, unsigned movimientosTabu, unsigned tamTabu) {
+	//Hay 3 tipos de vecindad:
+	//Vecindad con un nuevo elemento agregado
+	//Vecindad sin un elemento
+	//Vecindad con un elemento intercambiado
 	int frontera = cardinalFrontera(nodos, solucionInicial);
-	//Supongo que la vencidad es la misma solución excepto por un elemento cambiado
-	unsigned movimientosTabuRestantes = movimientosTabu;
-	bool faseTabu = false;
-	vector<int> *mejorSolucion = 0;
-	int mejorSolucionFrontera = 0;
-	set<int> conjTabu;
-	queue<int> colaTabu;
+
+	//----------> Variables del tabú <-------------
+	unsigned movimientosTabuRestantes = movimientosTabu;  //movimientos tabú restantes por hacer
+	bool faseTabu = false;			//estoy en "modo tabú", es decir, utilizando elementos que no mejoran mi solución
+	vector<int> *mejorSolucion = 0; //mejor clique hasta el momento
+	int mejorSolucionFrontera = 0; //mejor frontera hasta el momento 
+	set<int> conjTabu;   //conjunto de elementos tabú
+	queue<int> colaTabu; //colaTabú para saber cuál elemento eliminar cuando pasa el máximo
+	//
+
 	while(true) {
 		operacion op;
 		int nodoAfectado;
 		int nodoAdicional;
+		//comienza con un aporte muy chico para tener en cuenta operaciones que no mejoren la frontera
 		int aporteAFrontera = - (nodos.size()*nodos.size());
 
 		// Operación AGREGAR
@@ -102,25 +110,24 @@ pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, u
 			}
 		}
 
-		if(aporteAFrontera <= 0) {
+		//--------> Utilización del método tabú <---------
+		if(aporteAFrontera <= 0) { //Ninguno de los pasos me mejora la frontera
 			if(!faseTabu) {
-				faseTabu = true;
+				faseTabu = true; //entro en modo tabú
 				if(mejorSolucion != 0) delete mejorSolucion;
-				mejorSolucion = new vector<int>(solucionInicial);
-				for (unsigned i = 0; i < solucionInicial.size(); ++i) {
-					cout << solucionInicial[i] << " ";
-				}
-				cout << endl;
-				mejorSolucionFrontera = frontera;
+				mejorSolucion = new vector<int>(solucionInicial); //guardo la mejor solución hasta el momento
+				mejorSolucionFrontera = frontera;	//guardo la mejor frontera hasta el momento
 			}
-			conjTabu.insert(nodoAfectado);
-			colaTabu.push(nodoAfectado);
-			if(colaTabu.size() > tamTabu) {
+			conjTabu.insert(nodoAfectado); //el nodoAfectado ahora es tabú
+			colaTabu.push(nodoAfectado); //agrego a la cola tabú
+			//Si mi cola tabú es mayor de lo que quiero, la achico
+			if(colaTabu.size() > tamTabu) { 
 				int primero = colaTabu.front();
 				colaTabu.pop();
 				conjTabu.erase(primero);
 			}
 			movimientosTabuRestantes--;
+			//Me quedo sin movimientos restantes tabú
 			if(movimientosTabuRestantes == 0) {
 				vector<int> sol(*mejorSolucion);
 				delete mejorSolucion;
@@ -128,10 +135,12 @@ pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, u
 			}
 
 		}
+		//Si los movimientos que hice hasta ahora mejoraron la mejor solución que tenía..
 		else if((aporteAFrontera + frontera > mejorSolucionFrontera) && faseTabu){
 			movimientosTabuRestantes = movimientosTabu;
 			faseTabu = false;
 		}
+		//
 
 		switch(op) {
 			case AGREGAR:
