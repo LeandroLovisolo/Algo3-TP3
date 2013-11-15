@@ -51,7 +51,7 @@ pair<int, vector<int> > golosa(vector<nodo> &nodos) {
 	 		if(parteDelClique(resultado, nodos, *it) && !enElclique(resultado, *it)) {
 	 			//Si pertenece al clique, checkeo cuanto aportaría a la frontera
 	 			//Solo me quedo con el que me aporte una cantidad máxima
-	 			int nuevaFronteraLocal = nodos[*it].adyacentes.size() - resultado.size();
+	 			int nuevaFronteraLocal = nodos[*it].adyacentes.size() - resultado.size() - 1;
 	 			if (nuevaFronteraLocal > maxFronteraLocal) {
 	 				maxFronteraLocal = nuevaFronteraLocal;
 	 				maxAdyacenteLocal = *it;
