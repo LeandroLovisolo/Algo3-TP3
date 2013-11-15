@@ -50,7 +50,7 @@ pair<int, vector<int> > local(vector<nodo> &nodos, vector<int> solucionInicial) 
 		// Operación AGREGAR
 		for (unsigned i = 0; i < nodos.size(); ++i) {
 			if(!estaEnLaClique(i, solucionInicial) && agregandoSigueSiendoClique(solucionInicial, nodos, i)) {
-				int aporte = nodos[i].adyacentes.size() - solucionInicial.size();
+				int aporte = nodos[i].adyacentes.size() - solucionInicial.size() -1;
 				if(aporte > aporteAFrontera) {
 					op = AGREGAR;
 					nodoAfectado = i;
