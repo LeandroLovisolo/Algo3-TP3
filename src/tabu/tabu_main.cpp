@@ -33,9 +33,11 @@ int main() {
             // Ignoro el resto de la línea.
 			getline(cin, s);
 		}
-
+		for (unsigned i = 0; i < n; ++i) {
+			nodos[i].numero = i;
+		}
 		pair<int, vector<int> > resGolosa = golosa(nodos);
-		pair<int, vector<int> > res = tabu(nodos, resGolosa.second, 3);
+		pair<int, vector<int> > res = tabu(nodos, resGolosa.second, 3, 1);
 		cout << res.first << " " << res.second.size() << " ";
 		for (unsigned i = 0; i < res.second.size(); ++i) {
 			cout << res.second[i]+1;

@@ -33,7 +33,9 @@ int main() {
             // Ignoro el resto de la línea.
 			getline(cin, s);
 		}
-
+		for (unsigned i = 0; i < n; ++i) {
+			nodos[i].numero = i;
+		}
 		pair<int, vector<int> > resGolosa = golosa(nodos);
 		pair<int, vector<int> > res = local(nodos, resGolosa.second);
 		cout << res.first << " " << res.second.size() << " ";
