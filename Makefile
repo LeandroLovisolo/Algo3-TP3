@@ -87,7 +87,7 @@ local_main.o: src/local/local.h src/local/local_main.cpp
 # Problema 4                                                                #
 ###############################################################################
 
-tabu: tabu.o tabu_main.o
+tabu: tabu.o tabu_main.o golosa.o
 	$(BIN_MAIN)
 
 tabu.o: src/tabu/tabu.cpp src/tabu/tabu.h
