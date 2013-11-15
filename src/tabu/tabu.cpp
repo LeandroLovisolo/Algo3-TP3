@@ -33,9 +33,9 @@ bool agregandoSigueSiendoClique(vector<int> &clique, vector<nodo> &nodos, int no
 	return true;
 }
 
-bool intercambiandoSigueSiendoClique(vector<int> &clique, vector<nodo> &nodos, int nodoCandidato, int nodoActual) {
+bool intercambiandoSigueSiendoClique(vector<int> &clique, vector<nodo> &nodos, int nodoViejo, int nodoNuevo) {
 	for (unsigned i = 0; i < clique.size(); ++i) {
-		if(i != (unsigned) nodoActual && !sonAdyacentes(nodos[clique[i]], nodos[nodoCandidato])) return false;
+		if(i != (unsigned) nodoViejo && !sonAdyacentes(nodos[clique[i]], nodos[nodoNuevo])) return false;
 	}
 	return true;
 }
@@ -52,11 +52,6 @@ pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, u
 	set<int> conjTabu;
 	queue<int> colaTabu;
 	while(true) {
-		cout << "Solucion al inicio del while" << endl;
-		for (unsigned i = 0; i < solucionInicial.size(); ++i) {
-			cout << solucionInicial[i] << " ";
-		}
-		cout << endl;
 		operacion op;
 		int nodoAfectado;
 		int nodoAdicional;
@@ -74,7 +69,6 @@ pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, u
 				}
 			}
 		}
-		cout << "aporteAFrontera despues de agregar " << aporteAFrontera << endl;
 		// Operación INTERCAMBIAR
 		for (unsigned i = 0; i < solucionInicial.size(); ++i) {
 			//Calculamos cuánto aporta i a la frontera
@@ -93,7 +87,6 @@ pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, u
 				}
 			}
 		}
-		cout << "aporteAFrontera despues de intercambiar " << aporteAFrontera << endl;
 		// Operación ELIMINAR
 		for (unsigned i = 0; i < solucionInicial.size(); ++i) {
 			if(noEsTabu(conjTabu, nodos[i])) {
@@ -108,30 +101,22 @@ pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, u
 				}
 			}
 		}
-		cout << "aporteAFrontera despues de eliminar " << aporteAFrontera << endl;
 
 		if(aporteAFrontera <= 0) {
-			cout << "Aporte a frontera = " << aporteAFrontera << endl;
 			if(!faseTabu) {
-				cout << "Entra a la fase tabu" << endl;
-				cout << "Frontera actual " << frontera << endl;
 				faseTabu = true;
 				if(mejorSolucion != 0) delete mejorSolucion;
 				mejorSolucion = new vector<int>(solucionInicial);
-				cout << "Solucion" << endl;
 				for (unsigned i = 0; i < solucionInicial.size(); ++i) {
 					cout << solucionInicial[i] << " ";
 				}
 				cout << endl;
 				mejorSolucionFrontera = frontera;
 			}
-			cout << "Movimiento a realizar: " << op << endl;
-			cout << "nodoAfectado = " << nodoAfectado << endl;
 			conjTabu.insert(nodoAfectado);
 			colaTabu.push(nodoAfectado);
 			if(colaTabu.size() > tamTabu) {
 				int primero = colaTabu.front();
-				cout << "Supero el tamaño de la cola tabu, borro " << primero << endl;
 				colaTabu.pop();
 				conjTabu.erase(primero);
 			}
@@ -144,7 +129,6 @@ pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, u
 
 		}
 		else if((aporteAFrontera + frontera > mejorSolucionFrontera) && faseTabu){
-			cout << "Consiguio una mejor frontera = " << frontera + aporteAFrontera << endl;
 			movimientosTabuRestantes = movimientosTabu;
 			faseTabu = false;
 		}
