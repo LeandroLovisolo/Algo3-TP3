@@ -48,7 +48,7 @@ int main()
             }
         #endif
     	vector<int> clique;
-        pair<int, vector<int> > res = fronteraMaxima(nodos, clique, 0);
+        pair<int, vector<int> > res = exacto(nodos, clique, 0);
         cout << res.first << " " << res.second.size() << " ";
         for (unsigned i = 0; i < res.second.size(); ++i) {
             cout << res.second[i]+1;

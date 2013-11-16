@@ -25,7 +25,7 @@ bool enElclique(vector<int> &clique, int pos) {
 	for (unsigned i = 0; i < clique.size(); ++i) {
 		if(clique[i] == pos) {
 			return true;	
-		} 
+		}
 	}
 	return false;
 }
@@ -48,10 +48,10 @@ pair<int, vector<int> > golosa(vector<nodo> &nodos) {
 	 	//Recorro los adyacentes para ver cuál elegir
 	 	for (set<int>::iterator it=nodos[actual].adyacentes.begin(); it!=nodos[actual].adyacentes.end(); ++it) {
 	 		//Checkeo que pertenezcan al clique, es decir, que sea adyacente a todos los elementos del clique
-	 		if(parteDelClique(resultado, nodos, *it) && !enElclique(resultado, *it)) {
+	 		if(agregandoSigueSiendoClique(resultado, nodos, *it) && !estaEnLaClique(*it, resultado)) {
 	 			//Si pertenece al clique, checkeo cuanto aportaría a la frontera
 	 			//Solo me quedo con el que me aporte una cantidad máxima
-	 			int nuevaFronteraLocal = nodos[*it].adyacentes.size() - resultado.size() - 1;
+	 			int nuevaFronteraLocal = nodos[*it].adyacentes.size() - 2 * resultado.size();
 	 			if (nuevaFronteraLocal > maxFronteraLocal) {
 	 				maxFronteraLocal = nuevaFronteraLocal;
 	 				maxAdyacenteLocal = *it;

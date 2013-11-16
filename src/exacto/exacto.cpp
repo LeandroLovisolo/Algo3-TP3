@@ -9,52 +9,32 @@
 
 using namespace std;
 
-//Verifica si el nodo actual podría pertenecer al clique
-bool parteDelClique(vector<int> &clique, vector<nodo> &nodos, int nodoActual) {
-	for (unsigned i = 0; i < clique.size(); ++i) {
-		if(nodos[clique[i]].adyacentes.find(nodoActual) == nodos[clique[i]].adyacentes.end()) {
-			return false;
-		}
-	}
-	return true;
-}
-
-//Devuelve el tamaño de la frontera del clique
-int frontera(vector<nodo> &nodos, vector<int> &clique) {
-	int size = 0;
-	for (unsigned j = 0; j < clique.size(); ++j) {
-		size += nodos[clique[j]].adyacentes.size();
-	}
-	size -= (clique.size()-1)*clique.size();
-	return size;
-}
-
-pair<int,vector<int> > fronteraMaxima(vector<nodo> &nodos, vector<int> &clique, unsigned pos) {
+pair<int,vector<int> > exacto(vector<nodo> &nodos, vector<int> &clique, unsigned pos) {
 	//Caso base, termino de recorrer el vector de nodos
 	if(pos == nodos.size()) return make_pair(0, vector<int>());
 	int fronteraMax = 0; //Guarda la frontera máxima
 	vector<int> *maxClique = 0; //Guarda el clique máximo
-	//Recorro los nodos que faltan y creo los subconjuntos
+	//Recorro los nodos que |faltan y creo los subconjuntos
 	for (unsigned i = pos; i < nodos.size(); ++i) {
 		//Me fijo si agregando el nodo i, sigo teniendo un clique
-		if(parteDelClique(clique, nodos, i)) {
+		if(agregandoSigueSiendoClique(clique, nodos, i)) {
 			//Backup del clique y agrego el nodo actual
 			vector<int> cliqueTmp(clique);
 			cliqueTmp.push_back(i);
 
-			//Llamo recursivamente a fronteraMaxima con el nuevo clique que tiene el nodo i agregado
-			pair<int, vector<int> > fronteraRec = fronteraMaxima(nodos, cliqueTmp, i + 1);
+			//Llamo recursivamente a exacto con el nuevo clique que tiene el nodo i agregado
+			pair<int, vector<int> > fronteraRec = exacto(nodos, cliqueTmp, i + 1);
 
 			//Calculo el tamaño de la frontera con el nodo i agregado
-			int tmpFrontera = frontera(nodos, cliqueTmp);
+			int candidatoFronteraMax = cardinalFrontera(nodos, cliqueTmp);
 
 			//Comparo la frontera con el nodo i agregado vs la frontera máxima que tiene el nodo i y los
 			//anteriores en el clique
-			if(max(tmpFrontera, fronteraRec.first) > fronteraMax) {
+			if(max(candidatoFronteraMax, fronteraRec.first) > fronteraMax) {
 				//Guardo la frontera máxima y el clique máximo
-				fronteraMax = max(tmpFrontera, fronteraRec.first);
+				fronteraMax = max(candidatoFronteraMax, fronteraRec.first);
 				if(maxClique != 0) delete maxClique;
-				if(tmpFrontera > fronteraRec.first) {
+				if(candidatoFronteraMax > fronteraRec.first) {
 					maxClique = new vector<int>(cliqueTmp);
 				}
 				else {
