@@ -25,13 +25,18 @@ int main()
         // Armo el grafo.
         vector<nodo> nodos;
         nodos.resize(n);
-        for(unsigned i = 0; i < m; ++i) {
 
+        // Asigno el índice a cada nodo.
+        for(size_t i = 0; i < nodos.size(); ++i) nodos[i].indice = i;
+
+        for(unsigned i = 0; i < m; ++i) {
             unsigned v, w;
             cin >> v; // Leo nodo v.
             cin >> w; // Leo nodo w.
+
             nodos[v-1].adyacentes.insert(w-1);
             nodos[w-1].adyacentes.insert(v-1);
+
             // Ignoro el resto de la línea.
             getline(cin, s);
         }
@@ -48,7 +53,7 @@ int main()
             }
         #endif
     	vector<int> clique;
-        pair<int, vector<int> > res = exacto(nodos, clique, 0);
+        pair<int, vector<int> > res = exacto(nodos);
         cout << res.first << " " << res.second.size() << " ";
         for (unsigned i = 0; i < res.second.size(); ++i) {
             cout << res.second[i]+1;

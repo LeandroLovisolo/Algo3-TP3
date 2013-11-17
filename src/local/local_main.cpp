@@ -34,7 +34,7 @@ int main() {
 			getline(cin, s);
 		}
 		for (unsigned i = 0; i < n; ++i) {
-			nodos[i].numero = i;
+			nodos[i].indice = i;
 		}
 		pair<int, vector<int> > resGolosa = golosa(nodos);
 		pair<int, vector<int> > res = local(nodos, resGolosa.second);

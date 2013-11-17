@@ -1,13 +1,13 @@
 #ifndef TABU_H
 #define TABU_H
 
-#include <set>
-#include <vector>
-#include <utility>
-#include "../common/common.h"
+#include "common.h"
 
 using namespace std;
 
-pair<int, vector<int> > tabu(vector<nodo> &nodos, vector<int> solucionInicial, unsigned movimientosTabu, unsigned tamTabu);
+cmf tabu(const vector<nodo> &nodos,
+		 const vector<indice_nodo> &solucionInicial,
+		 unsigned movimientosTabu,
+		 unsigned cantidadDeNodosTabu);
 
 #endif // TABU_H

@@ -1,14 +1,8 @@
 #ifndef EXACTO_H
 #define EXACTO_H
 
-#include <vector>
-#include <set>
-#include <algorithm>
-#include <tuple>
-#include "../common/common.h"
+#include "common.h"
 
-using namespace std;
-
-pair<int,vector<int> > exacto(vector<nodo> &nodos, vector<int> &clique, unsigned pos);
+cmf exacto(const vector<nodo> &nodos);
 
 #endif // EXACTO_H

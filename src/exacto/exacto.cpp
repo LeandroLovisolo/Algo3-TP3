@@ -1,55 +1,62 @@
-#include <iostream>
 #include "exacto.h"
-#include <utility>
-#include <tuple>
 
-#define tam_frontera(e) get<0>(e)
-#define clique(e) get<1>(e)
-#define c_frontera(e) get<2>(e)
+// Prototipo del auxiliar recursivo.
+cmf exacto_rec(const vector<nodo> &nodos,
+		       const vector<indice_nodo> &clique,
+		       unsigned pos);
 
-using namespace std;
+cmf exacto(const vector<nodo> &nodos) {
+	return exacto_rec(nodos, vector<indice_nodo>(), 0);
+}
 
-pair<int,vector<int> > exacto(vector<nodo> &nodos, vector<int> &clique, unsigned pos) {
-	//Caso base, termino de recorrer el vector de nodos
-	if(pos == nodos.size()) return make_pair(0, vector<int>());
-	int fronteraMax = 0; //Guarda la frontera máxima
-	vector<int> *maxClique = 0; //Guarda el clique máximo
-	//Recorro los nodos que |faltan y creo los subconjuntos
+// Devuelvo la CMF que se obtiene al agregarle nodos con índice en el intervalo
+// [pos + 1, n] a la clique inicial, donde n es la cantidad de nodos en el grafo.
+cmf exacto_rec(const vector<nodo> &nodos,
+		       const vector<indice_nodo> &clique_inicial,
+		       unsigned pos) {
+
+	// Caso base. Terminé de evaluar todos los nodos del grafo.
+	if(pos == nodos.size()) return nueva_cmf(0, vector<indice_nodo>());
+
+	// Mejor CMF hallada hasta el momento
+	cmf mejor_cmf;
+
+	// Evalúo todas las cliques posibles resultantes de agregar los nodos con
+	// índice en el intervalo [pos + 1, n] a la clique inicial.
 	for (unsigned i = pos; i < nodos.size(); ++i) {
-		//Me fijo si agregando el nodo i, sigo teniendo un clique
-		if(agregandoSigueSiendoClique(clique, nodos, i)) {
-			//Backup del clique y agrego el nodo actual
-			vector<int> cliqueTmp(clique);
-			cliqueTmp.push_back(i);
 
-			//Llamo recursivamente a exacto con el nuevo clique que tiene el nodo i agregado
-			pair<int, vector<int> > fronteraRec = exacto(nodos, cliqueTmp, i + 1);
+		// ¿Sigo teniendo una clique si agrego el nodo i-ésimo a la clique
+		// inicial?
+		if(agregandoSigueSiendoClique(nodos, clique_inicial, i)) {
 
-			//Calculo el tamaño de la frontera con el nodo i agregado
-			int candidatoFronteraMax = cardinalFrontera(nodos, cliqueTmp);
+			// Considero la CMF obtenida al agregarle el i-ésimo nodo a la
+			// clique inicial.
+			cmf agregandoIesimo = nueva_cmf(0, clique_inicial);
+			indices_nodos(agregandoIesimo).push_back(i);
+			frontera(agregandoIesimo) =
+					cardinalFrontera(nodos, indices_nodos(agregandoIesimo));
 
-			//Comparo la frontera con el nodo i agregado vs la frontera máxima que tiene el nodo i y los
-			//anteriores en el clique
-			if(max(candidatoFronteraMax, fronteraRec.first) > fronteraMax) {
-				//Guardo la frontera máxima y el clique máximo
-				fronteraMax = max(candidatoFronteraMax, fronteraRec.first);
-				if(maxClique != 0) delete maxClique;
-				if(candidatoFronteraMax > fronteraRec.first) {
-					maxClique = new vector<int>(cliqueTmp);
-				}
-				else {
-					maxClique = new vector<int>(fronteraRec.second);
-				}
+			// Resuelvo el subproblema de hallar la CMF obtenida de agregarle a
+			// la nueva clique algún subconjunto de los nodos con índice en el
+			// intervalo [pos + 1, n].
+			cmf subproblema =
+					exacto_rec(nodos, indices_nodos(agregandoIesimo), i + 1);
+
+			// Decido cuál de las dos cliques anteriores considero como
+			// candidata a clique de frontera máxima, es decir, cuál de las dos
+			// cliques tiene frontera más grande.
+			cmf &candidata =
+					frontera(agregandoIesimo) > frontera(subproblema) ?
+							agregandoIesimo : subproblema;
+
+			// Si hallamos una clique con frontera mayor a la de la mejor
+			// solución hallada hasta el momento, actualizamos la mejor
+			// solución.
+			if(frontera(candidata) > frontera(mejor_cmf)) {
+				mejor_cmf = candidata;
 			}
 		}
 	}
-	if(maxClique == 0) {
-		return make_pair(fronteraMax, vector<int>());
-	}
-	else {
-		vector<int> res(*maxClique);
-		delete maxClique;
-		return make_pair(fronteraMax, res);
-	}
 
+	return mejor_cmf;
 }
