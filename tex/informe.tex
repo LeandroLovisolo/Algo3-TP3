@@ -20,7 +20,7 @@
 %%%%%%%%%% Configuración de Fancyhdr - Inicio %%%%%%%%%%
 \pagestyle{fancy}
 \thispagestyle{fancy}
-\lhead{Trabajo Práctico 2 · Algoritmos y Estructuras de Datos III}
+\lhead{Trabajo Práctico 3 · Algoritmos y Estructuras de Datos III}
 \rhead{Lovisolo · Petaccio · Rossi}
 \renewcommand{\footrulewidth}{0.4pt}
 \cfoot{\thepage /\pageref{LastPage}}
@@ -44,6 +44,19 @@
     \end{algorithmic}%
     \vspace{1em}%
 }
+
+
+% switch
+\algnewcommand\algorithmicswitch{\textbf{switch}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+\algnewcommand\algorithmicassert{\texttt{assert}}
+\algdef{SE}[SWITCH]{Switch}{EndSwitch}[1]{\algorithmicswitch\ #1\ \algorithmicdo}{\algorithmicend\ \algorithmicswitch}%
+\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ #1}{\algorithmicend\ \algorithmiccase}%
+\algtext*{EndSwitch}%
+\algtext*{EndCase}%
+
+
+
 
 % Valores de verdad
 \newcommand{\True}{\textbf{true}}
@@ -362,6 +375,109 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 
 \section{Heurística de búsqueda local}
 \subsection{Algoritmo}
+
+\begin{pseudo}
+
+\State \textbf{operacion} es enum {AGREGAR, ELIMINAR, INTERCAMBIAR}
+\State \textbf{indice\_nodo} es int
+\State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto$<$indice\_nodo$>$ adyacentes$>$
+\State \textbf{cmf} es par$<$int, vector$<$indice\_nodo$>>$
+
+\State
+\Procedure{local}{vector de nodo \&nodos, vector de int \&cliqueInicial} $\rightarrow$ cmf
+	
+	\State operacion op
+	\State indice\_nodo nodoAAgregar
+	\State indice\_nodo nodoAEliminar
+	\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar
+	\State int aporte = 0
+
+	\State
+	\State \textbf{Operación Agregar}
+	\State
+	\State \textbf{Operación Intercambiar}
+	\State
+	\State \textbf{Operación Eliminar}
+	\State
+
+	\If{aporte == 0} break \EndIf
+
+  	\Switch{$op$}
+	    \Case{AGREGAR}
+		    \State indices\_nodos(solucion).push\_back(nodoAAgregar)
+		    \State break
+	    \EndCase
+
+	    \Case{ELIMINAR}
+		    \State indices\_nodos(solucion).erase(
+		    \State indices\_nodos(solucion).begin() + nodoAEliminar)
+		    \State break
+	    \EndCase
+
+	   	\Case{INTERCAMBIAR}
+		    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second
+	    \EndCase
+	\EndSwitch
+	\State
+	\State frontera(solucion) += aporte
+	\State return solucion
+
+\EndProcedure
+\State
+\State donde \textbf{Operación Agregar} es:
+\State
+		\For{unsigned: i = 0 To nodos.size}
+			\If{!estaEnLaClique(indices\_nodos(solucion), i) \&
+			   agregandoSigueSiendoClique(nodos, indices\_nodos(solucion), i)}
+
+				\State int aporteAgregar = nodos[i].adyacentes.size() - 2 * indices\_nodos(solucion).size()
+
+				\If{aporteAgregar $>$ aporte}
+					\State op = AGREGAR
+					\State nodoAAgregar = i
+					\State aporte = aporteAgregar
+				\EndIf
+			\EndIf
+		\EndFor
+
+\State
+\State donde \textbf{Operación Intercambiar} es:
+\State
+
+			\For{unsigned j = 0 To nodos.size()}
+				\If{!estaEnLaClique(indices\_nodos(solucion), j) \&
+				   intercambiandoSigueSiendoClique(
+						   nodos, indices\_nodos(solucion), i, j))}
+
+					\State int aporteJEsimo = nodos[j].adyacentes.size() -(indices\_nodos(solucion).size() - 1)
+
+					\State int aporteNeto = aporteJEsimo - aporteIEsimo
+
+					\If{aporteNeto $>$ aporte}
+						\State aporte = aporteNeto
+						\State op = INTERCAMBIAR
+						\State nodosAIntercambiar = make\_pair(i, j)
+					\EndIf
+				\EndIf
+			\EndFor		
+
+\State
+\State donde \textbf{Operación Eliminar} es:
+\State
+		\For{unsigned i = 0 To indices\_nodos(solucion).size}
+			\State indice\_nodo iEsimo = indices\_nodos(solucion)[i]
+			\State int aporteEliminar = 2 * (indices\_nodos(solucion).size() - 1) - nodos[iEsimo].adyacentes.size()
+
+			\If{aporteEliminar $>$ aporte}
+				\State op = ELIMINAR
+				\State odoAEliminar = i
+				\State aporte = aporteEliminar
+			\EndIf
+		\EndFor
+
+
+\end{pseudo}
+
 \subsection{Complejidad}
 \subsection{Análisis de eficacia}
 \subsection{Performance}
