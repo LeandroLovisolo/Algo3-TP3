@@ -379,17 +379,17 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 
 \State \textbf{operacion} es enum {AGREGAR, ELIMINAR, INTERCAMBIAR}
 \State \textbf{indice\_nodo} es int
-\State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto$<$indice\_nodo$>$ adyacentes$>$
-\State \textbf{cmf} es par$<$int, vector$<$indice\_nodo$>>$
+\State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto de indice\_nodo adyacentes$>$
+\State \textbf{cmf} es par$<$int, vector de indice\_nodo$>$
 
 \State
-\Procedure{local}{vector de nodo \&nodos, vector de int \&cliqueInicial} $\rightarrow$ cmf
+\Procedure{local}{vector de nodo nodos, vector de int cliqueInicial} $\rightarrow$ cmf
 	
-	\State operacion op
-	\State indice\_nodo nodoAAgregar
-	\State indice\_nodo nodoAEliminar
-	\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar
-	\State int aporte = 0
+	\State operacion op 																		\Ode{1}
+	\State indice\_nodo nodoAAgregar															\Ode{1}
+	\State indice\_nodo nodoAEliminar															\Ode{1}
+	\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar								\Ode{1}
+	\State int aporte $\leftarrow$ 0															\Ode{1}
 
 	\State
 	\State \textbf{Operación Agregar}
@@ -399,7 +399,7 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 	\State \textbf{Operación Eliminar}
 	\State
 
-	\If{aporte == 0} break \EndIf
+	\If{aporte == 0} break \EndIf																\Ode{1}
 
   	\Switch{$op$}
 	    \Case{AGREGAR}
@@ -432,9 +432,9 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 				\State int aporteAgregar = nodos[i].adyacentes.size() - 2 * indices\_nodos(solucion).size()
 
 				\If{aporteAgregar $>$ aporte}
-					\State op = AGREGAR
-					\State nodoAAgregar = i
-					\State aporte = aporteAgregar
+					\State op $\leftarrow$ AGREGAR
+					\State nodoAAgregar $\leftarrow$ i
+					\State aporte $\leftarrow$ aporteAgregar
 				\EndIf
 			\EndIf
 		\EndFor
@@ -448,14 +448,14 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 				   intercambiandoSigueSiendoClique(
 						   nodos, indices\_nodos(solucion), i, j))}
 
-					\State int aporteJEsimo = nodos[j].adyacentes.size() -(indices\_nodos(solucion).size() - 1)
+					\State int aporteJEsimo $\leftarrow$ nodos[j].adyacentes.size() -(indices\_nodos(solucion).size() - 1)
 
-					\State int aporteNeto = aporteJEsimo - aporteIEsimo
+					\State int aporteNeto $\leftarrow$ aporteJEsimo - aporteIEsimo
 
 					\If{aporteNeto $>$ aporte}
-						\State aporte = aporteNeto
-						\State op = INTERCAMBIAR
-						\State nodosAIntercambiar = make\_pair(i, j)
+						\State aporte $\leftarrow$ aporteNeto
+						\State op $\leftarrow$ INTERCAMBIAR
+						\State nodosAIntercambiar $\leftarrow$ make\_pair(i, j)
 					\EndIf
 				\EndIf
 			\EndFor		
@@ -464,13 +464,13 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 \State donde \textbf{Operación Eliminar} es:
 \State
 		\For{unsigned i = 0 To indices\_nodos(solucion).size}
-			\State indice\_nodo iEsimo = indices\_nodos(solucion)[i]
-			\State int aporteEliminar = 2 * (indices\_nodos(solucion).size() - 1) - nodos[iEsimo].adyacentes.size()
+			\State indice\_nodo iEsimo $\leftarrow$ indices\_nodos(solucion)[i]
+			\State int aporteEliminar $\leftarrow$ 2 * (indices\_nodos(solucion).size() - 1) - nodos[iEsimo].adyacentes.size()
 
 			\If{aporteEliminar $>$ aporte}
-				\State op = ELIMINAR
-				\State odoAEliminar = i
-				\State aporte = aporteEliminar
+				\State op $\leftarrow$ ELIMINAR
+				\State odoAEliminar $\leftarrow$ i
+				\State aporte $\leftarrow$ aporteEliminar
 			\EndIf
 		\EndFor
 
