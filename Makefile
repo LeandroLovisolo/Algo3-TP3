@@ -8,7 +8,7 @@
 GTEST_DIR = lib/gtest-1.6.0
 
 # Flags del preprocesador C++.
-# CPPFLAGS += -Isrc
+CPPFLAGS += -Isrc/common -I$(GTEST_DIR)/include
 
 # Flags del compilador C++.
 CXXFLAGS += -g -Wall -Wextra -std=c++0x
@@ -26,10 +26,7 @@ BIN_TEST  = $(BIN_MAIN) -lpthread
 TEST_DEPS = gtest-all.o
 
 # Binarios generados
-BINS      = exacto \
-            golosa \
-            local  \
-            tabu
+BINS      = exacto golosa local tabu tests
 
 ###############################################################################
 # Targets generales                                                           #
@@ -40,60 +37,68 @@ all: $(BINS)
 clean:
 	rm -f *.o $(BINS)
 	rm -f informe.pdf tex/*.pdf tex/*.aux tex/*.log tex/*.toc
-
-gtest-all.o:
-	$(OBJ) -I$(GTEST_DIR) -c $(GTEST_DIR)/src/gtest-all.cc
+	
 common.o: src/common/common.cpp src/common/common.h
 	$(OBJ) src/common/common.cpp
 
+gtest-all.o:
+	$(OBJ) -I$(GTEST_DIR) -c $(GTEST_DIR)/src/gtest-all.cc
+
 ###############################################################################
-# Problema 1                                                                  #
+# Exacto                                                                      #
 ###############################################################################
 
 exacto: exacto.o exacto_main.o common.o
 	$(BIN_MAIN)
 
-exacto.o: src/exacto/exacto.cpp src/exacto/exacto.h
+exacto.o: src/exacto/exacto.cpp src/exacto/exacto.h src/common/common.h
 	$(OBJ) src/exacto/exacto.cpp
 
 exacto_main.o: src/exacto/exacto.h src/exacto/exacto_main.cpp
 	$(OBJ) src/exacto/exacto_main.cpp
 
 ###############################################################################
-# Problema 2                                                                  #
+# Golosa                                                                      #
 ###############################################################################
 
 golosa: golosa.o golosa_main.o common.o
 	$(BIN_MAIN)
 
-golosa.o: src/golosa/golosa.cpp src/golosa/golosa.h
+golosa.o: src/golosa/golosa.cpp src/golosa/golosa.h src/common/common.h
 	$(OBJ) src/golosa/golosa.cpp
 
 golosa_main.o: src/golosa/golosa.h src/golosa/golosa_main.cpp
 	$(OBJ) src/golosa/golosa_main.cpp
 
 ###############################################################################
-# Problema 3                                                                  #
+# Local                                                                       #
 ###############################################################################
 
 local: local.o local_main.o golosa.o common.o
 	$(BIN_MAIN)
 
-local.o: src/local/local.cpp src/local/local.h
+local.o: src/local/local.cpp src/local/local.h src/common/common.h
 	$(OBJ) src/local/local.cpp
 
 local_main.o: src/local/local.h src/local/local_main.cpp
 	$(OBJ) src/local/local_main.cpp
 
 ###############################################################################
-# Problema 4                                                                #
+# Tabú                                                                        #
 ###############################################################################
 
 tabu: tabu.o tabu_main.o golosa.o common.o
 	$(BIN_MAIN)
 
-tabu.o: src/tabu/tabu.cpp src/tabu/tabu.h
+tabu.o: src/tabu/tabu.cpp src/tabu/tabu.h src/common/common.h
 	$(OBJ) src/tabu/tabu.cpp
 
 tabu_main.o: src/tabu/tabu.h src/tabu/tabu_main.cpp
 	$(OBJ) src/tabu/tabu_main.cpp
+
+###############################################################################
+# Tests                                                                       #
+###############################################################################
+
+tests: src/tests.cpp gtest-all.o
+	$(BIN_TEST)
