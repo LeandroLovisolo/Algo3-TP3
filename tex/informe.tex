@@ -362,7 +362,7 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 
 \begin{pseudo}
 
-\State \textbf{operacion} es enum {AGREGAR, ELIMINAR, INTERCAMBIAR}
+\State \textbf{operacion} es enum $\lbrace$AGREGAR, ELIMINAR, INTERCAMBIAR$\rbrace$
 \State \textbf{indice\_nodo} es int
 \State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto de indice\_nodo adyacentes$>$
 \State \textbf{cmf} es par$<$int, vector de indice\_nodo$>$
@@ -475,6 +475,160 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 
 \section{Heurística de búsqueda Tabú}
 \subsection{Algoritmo}
+
+\begin{pseudo}
+
+\State \textbf{operacion} es enum $\lbrace$AGREGAR, ELIMINAR, INTERCAMBIAR$\rbrace$
+\State \textbf{indice\_nodo} es int
+\State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto de indice\_nodo adyacentes$>$
+\State \textbf{cmf} es par$<$int, vector de indice\_nodo$>$
+
+\State
+\Procedure{local}{vector de nodo nodos, vector de int cliqueInicial} $\rightarrow$ cmf
+	
+
+	\State operacion op 																		\Ode{1}
+	\State indice\_nodo nodoAAgregar															\Ode{1}
+	\State indice\_nodo nodoAEliminar															\Ode{1}
+	\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar								\Ode{1}
+	\State int aporte $\leftarrow$ -INF															\Ode{1}
+
+	\State
+	\State \textbf{Operación Agregar}
+	\State
+	\State \textbf{Operación Intercambiar}
+	\State
+	\State \textbf{Operación Eliminar}
+	\State
+
+	\If{aporte $<$= 0}
+
+			\If{!faseTabu}
+				\State mejorSolucion $\leftarrow$ solucion
+				\State faseTabu $\leftarrow$ true
+			\EndIf
+
+			\Switch{$op$}
+				\Case{AGREGAR}
+				    \State tabu.marcar(nodoAAgregar)
+				    \State break
+				\EndCase
+				\Case{ELIMINAR}
+					\State  tabu.marcar(nodoAEliminar)
+					\State break
+				\EndCase
+				\Case{INTERCAMBIAR} 
+					\State tabu.marcar(nodosAIntercambiar.first)
+				\EndCase
+			\EndSwitch
+
+			\State movimientosTabuRestantes--
+			\If{movimientosTabuRestantes == 0} return mejorSolucion
+			\EndIf
+		\Else
+			\If{faseTabu \& (aporte + frontera(solucion) $>$ frontera(mejorSolucion))}
+			faseTabu $\leftarrow$ false
+			movimientosTabuRestantes $\leftarrow$ movimientosTabu
+			\EndIf
+		\EndIf
+
+
+  	\Switch{$op$}
+	    \Case{AGREGAR}
+		    \State indices\_nodos(solucion).push\_back(nodoAAgregar)
+		    \State break
+	    \EndCase
+
+	    \Case{ELIMINAR}
+		    \State indices\_nodos(solucion).erase(
+		    \State indices\_nodos(solucion).begin() + nodoAEliminar)
+		    \State break
+	    \EndCase
+
+	   	\Case{INTERCAMBIAR}
+		    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second
+	    \EndCase
+	\EndSwitch
+	\State
+	\State frontera(solucion) += aporte
+	\State return solucion
+
+\EndProcedure
+\State
+\State donde \textbf{Operación Agregar} es:
+\State
+
+		\For{unsigned: i = 0 To nodos.size}
+			\If{tabu.es\_tabu(nodos[i].indice)}
+			\State continue
+			\EndIf
+			\If{!estaEnLaClique(indices\_nodos(solucion), i) \&
+			   agregandoSigueSiendoClique(nodos, indices\_nodos(solucion), i)}
+
+				\State int aporteAgregar = nodos[i].adyacentes.size() - 2 * indices\_nodos(solucion).size()
+
+				\If{aporteAgregar $>$ aporte}
+					\State op $\leftarrow$ AGREGAR
+					\State nodoAAgregar $\leftarrow$ i
+					\State aporte $\leftarrow$ aporteAgregar
+				\EndIf
+			\EndIf
+		\EndFor
+
+\State
+\State donde \textbf{Operación Intercambiar} es:
+\State
+
+			\For{unsigned i = 0 To indices\_nodos(solucion).size()}
+				\If{tabu.es\_tabu(nodos[i].indice)}
+					\State continue
+				\EndIf
+				
+				\State indice\_nodo iEsimo $\leftarrow$  indices\_nodos(solucion)[i];
+				\State int aporteIEsimo $\leftarrow$  nodos[iEsimo].adyacentes.size() -  (indices\_nodos(solucion).size() - 1);
+				
+				\For{unsigned j = 0 To nodos.size()}
+					\If{tabu.es\_tabu(nodos[j].indice)}
+						\State continue
+					\EndIf
+
+
+					\If{!estaEnLaClique(indices\_nodos(solucion), j) \&
+					   intercambiandoSigueSiendoClique(
+							   nodos, indices\_nodos(solucion), i, j))}
+
+						\State int aporteJEsimo $\leftarrow$ nodos[j].adyacentes.size() -(indices\_nodos(solucion).size() - 1)
+
+						\State int aporteNeto $\leftarrow$ aporteJEsimo - aporteIEsimo
+
+						\If{aporteNeto $>$ aporte}
+							\State aporte $\leftarrow$ aporteNeto
+							\State op $\leftarrow$ INTERCAMBIAR
+							\State nodosAIntercambiar $\leftarrow$ make\_pair(i, j)
+						\EndIf
+					\EndIf
+				\EndFor
+			\EndFor		
+
+\State
+\State donde \textbf{Operación Eliminar} es:
+\State
+		\For{unsigned i = 0 To indices\_nodos(solucion).size}
+			\If{tabu.es\_tabu(nodos[i].indice)}
+					\State continue
+			\EndIf
+			\State indice\_nodo iEsimo $\leftarrow$ indices\_nodos(solucion)[i]
+			\State int aporteEliminar $\leftarrow$ 2 * (indices\_nodos(solucion).size() - 1) - nodos[iEsimo].adyacentes.size()
+
+			\If{aporteEliminar $>$ aporte}
+				\State op $\leftarrow$ ELIMINAR
+				\State odoAEliminar $\leftarrow$ i
+				\State aporte $\leftarrow$ aporteEliminar
+			\EndIf
+		\EndFor
+
+\end{pseudo}
+
 \subsection{Complejidad}
 \subsection{Análisis de eficacia}
 \subsection{Performance}
