@@ -102,3 +102,12 @@ tabu_main.o: src/tabu/tabu.h src/tabu/tabu_main.cpp
 
 tests: src/tests.cpp gtest-all.o
 	$(BIN_TEST)
+
+###############################################################################
+# Informe                                                                       #
+###############################################################################
+
+informe.pdf: tex/*.tex
+	cd tex; pdflatex -interactive=nonstopmode -halt-on-error informe.tex
+	cd tex; pdflatex -interactive=nonstopmode -halt-on-error informe.tex
+	cp tex/informe.pdf .
