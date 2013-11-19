@@ -348,25 +348,29 @@ Para finalizar, tiene un for que cicla a lo sumo N veces realizando operaciones 
 La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N).
 
 \subsection{Análisis de eficacia}
-Podemos observar el mal comportamiento del algoritmo en el siguiente grafo:
+Es posible determinar que el algoritmo goloso se desempeñará de forma ineficaz ante grafos que no incluyan al nodo de mayor grado en el clique de mayor frontera, ya que este siempre formará parte de la solución provista por el algoritmo. Esta solución empeora aun más, como podemos ver en el siguiente gráfico, si el nodo de grado máximo tiene adyacentes de grado 1, haciendo que el algoritmo no pueda explorar el grafo, debido a que al tomarlos como parte del clique solución, no mejorarán la frontera y no se tendran en cuenta.
+
 \begin{figure}[H]
 \includegraphics[width=80mm]{ejemploErrorGoloso.png}
 \caption{Las aristas de color rojo forman parte de la frontera encontrada por el algoritmo, mientras que las aristas de color azul forman la frontera máxima}
 \label{overflow}
 \end{figure}
-Analizando este grafo, puede encontrarse una familia, la cuál es posible manipular para conseguir una respuesta tan mala como se desee.
+
+Analizando este grafo, puede encontrarse una familia, la cuál es posible manipular para conseguir una respuesta tan mala como se desee. Esta familia está compuesta por un nodo de grado máximo no incluido en la solución y una clique donde cada nodo tiene grado máximo posible (grado máximo - 1).
 
 Incrementando la cantidad de adyacentes del nodo de mayor grado (nodo de color rojo), podemos hacer que el verdadero clique (parte azul) crezca, pudiendo incrementar la diferencia entre la frontera encontrada por el algoritmo y la frontera máxima del grafo provista por una clique.
 
-Tomando d = nodo de grado máximo y c = tamaño de clique elegido para sección azul, obtenemos que es posible calcular la frontera máxima según el tamaño del clique elejido y del grado máximo que puede encontrarse en el grafo.
+Tomando \textbf{d} = nodo de grado máximo y \textbf{c} = tamaño de clique elegido para sección azul, obtenemos que es posible calcular la frontera máxima según el tamaño del clique elejido y del grado máximo que puede encontrarse en el grafo.
 
 La ecuación de la fronera es la siguiente: $f(c) = (d - (c - 1)) * c$.
 
-Buscamos el c máximo para los valores de d. $f'(c) = d - 2 * c + 1$ = 0 $\Leftrightarrow$ $c = (d + 1)/2$.
+Buscamos el \textbf{c} máximo para los valores de d. $f'(c) = d - 2 * c + 1$ = 0 $\Leftrightarrow$ $c = (d + 1)/2$.
 
 Es posible corroborar que $c = (d + 1)/2$ es un máximo viendo: $f''((d + 1)/2) = -2 < 0$.
 
-Conociendo c, solo basta con hacer crecer el grado del nodo de mayor grado y conectarlo con un clique de tamaño (d + 1)/2 para obtener una diferencia de exactitud en tamaño de frontera de $(d - (c - 1)) * c$ - $d$, que se irá incrementado a medida que d crezca.
+Conociendo \textbf{c}, solo basta con hacer crecer el grado del nodo de mayor grado y conectarlo con un clique de tamaño $(d + 1)/2$ para obtener una diferencia de exactitud en tamaño de frontera de $(d - (c - 1)) * c$ - $d$, que se irá incrementado a medida que d crezca.
+
+Es posible notar que entre la solución encontrada (roja) y la solución verdadera (azul), puede existir cualquier grafo de por medio que no tenga un nodo de grado mayor a d, ni una clique con frontera mayor que la solución.
 
 \subsection{Performance}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
