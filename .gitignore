@@ -6,6 +6,7 @@ enunciado.pdf
 /golosa
 /local
 /tabu
+/tests
 
 # Código objeto
 *.o
