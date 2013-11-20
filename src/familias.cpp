@@ -162,3 +162,19 @@ vector<nodo> cicle(int n) {
 	Cgraph[0].adyacentes.insert(n - 1);
 	return Cgraph;
 }
+
+//Centipede graph http://mathworld.wolfram.com/Centipede.html
+vector<nodo> centipede(int n) {
+	vector<nodo> Cgraph(2*n);
+	for (int i = 0; i < n; i += 2) {
+		Cgraph[i].indice = i;
+		Cgraph[i+1].indice = i+1;
+		Cgraph[i].adyacentes.insert(i+1);
+		Cgraph[i+1].adyacentes.insert(i);
+		if(i != 0) {
+			Cgraph[i].adyacentes.insert(i-2);
+			Cgraph[i-2].adyacentes.insert(i);
+		}
+	}
+	return Cgraph;
+}
