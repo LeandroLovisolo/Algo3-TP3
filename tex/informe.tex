@@ -20,7 +20,7 @@
 %%%%%%%%%% Configuración de Fancyhdr - Inicio %%%%%%%%%%
 \pagestyle{fancy}
 \thispagestyle{fancy}
-\lhead{Trabajo Práctico 2 · Algoritmos y Estructuras de Datos III}
+\lhead{Trabajo Práctico 3 · Algoritmos y Estructuras de Datos III}
 \rhead{Lovisolo · Petaccio · Rossi}
 \renewcommand{\footrulewidth}{0.4pt}
 \cfoot{\thepage /\pageref{LastPage}}
@@ -44,6 +44,19 @@
     \end{algorithmic}%
     \vspace{1em}%
 }
+
+
+% switch
+\algnewcommand\algorithmicswitch{\textbf{switch}}
+\algnewcommand\algorithmiccase{\textbf{case}}
+\algnewcommand\algorithmicassert{\texttt{assert}}
+\algdef{SE}[SWITCH]{Switch}{EndSwitch}[1]{\algorithmicswitch\ #1\ \algorithmicdo}{\algorithmicend\ \algorithmicswitch}%
+\algdef{SE}[CASE]{Case}{EndCase}[1]{\algorithmiccase\ #1}{\algorithmicend\ \algorithmiccase}%
+\algtext*{EndSwitch}%
+\algtext*{EndCase}%
+
+
+
 
 % Valores de verdad
 \newcommand{\True}{\textbf{true}}
@@ -201,9 +214,9 @@ Sin más, presentamos los problemas estudiados a continuación.
 
 \section{Descripción de situaciones reales}
 \begin{itemize}
-\item Se tiene una serie de ciudades donde es posible construir una antena de señal. Las antenas deben poder comunicarse entre si para que el sistema funcione y solo pasa si están lo suficientemente cerca (se tiene una arista para las antenas suficientemente cerca). El algoritmo de CFM podrá determinar una buena distribución de las antenas que cubran la mayor cantidad de ciudades posible y estén conectadas entre si.
+\item Un área perteneciente a un bosque quiere abrirse a turistas. El bosque tiene una serie de senderos (aristas) que lo recorren y una serie de espacios libres (nodos). Los guardabosques quieren que la gente no se pierda nada de la naturaleza del bosque, quieren que los turistas puedan recorrer la mayor cantidad de caminos posibles. Como la gente es muy vaga, solo recorre los caminos que estén conectados a un claro donde haya un puesto para bebidas y descanso. Es necesario que los puestos estén todos comunicados para poder proveerse entre sí en caso de que a alguno le falte algo o necesite ayuda. 
 
-\item Una red social podría utilizar este tipo de algoritmos para encontrar posibles nuevas amistades según un grupo de amigos.
+Mediante el algoritmo de CFM podemos encontrar los espacios libres conectados entre sí para poner los paradores de manera que la gente pueda recorrer la mayor cantidad posible de caminos del bosque sin cansarse tanto.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -218,59 +231,44 @@ Sin más, presentamos los problemas estudiados a continuación.
 Para la implementación del algoritmo exacto utilizamos la técnica de backtracking que puede verse a continuación.
 
 \begin{pseudo}
-
-\State nodo es tupla $<$ adyacentes : conjunto de int, numero : int $>$
+\State \textbf{indice\_nodo} es int
+\State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto$<$indice\_nodo$>$ adyacentes$>$
+\State \textbf{cmf} es par$<$frontera : int, indices\_nodos : vector de indice\_nodo$>$
 \State
-\Procedure{parteDelClique}{vector de int \&clique, vector de nodo \&nodos, int nodoActual} $\rightarrow$ bool
-	\For{i = 0 To Tamaño(clique) - 1}
-		\If{!nodos[clique[i]].adyacentes.Pertenece?(nodoActual)}								\Ode{log n}
-			\State return false
-		\EndIf
-	\EndFor
-	\State return true
+\Procedure{exacto}{\&nodos : vector de nodo} $\rightarrow$ cmf
+	\State return exacto\_rec(nodos, vector de indice\_nodo vacío, 0)
+\State
 \EndProcedure
 
-\State
-\Procedure{frontera}{vector de nodo \&nodos, vector de int \&clique} $\rightarrow$ int 
-	\State size : int $\leftarrow$ 0
-	\For{i = 0 To Tamaño(clique) - 1}
-		\State size $\leftarrow$ size + Tamaño(nodos[clique[i]].adyacentes)				\Ode{1}
-	\EndFor
-	\State size $\leftarrow$ size - (Tamaño(clique)-1) * Tamaño(clique)				\Ode{1}
-	\State return size;
-\EndProcedure
+\Procedure{exacto\_rec}{\&nodos : vector de nodo,
+		       \&clique\_inicial : vector de indice\_nodo,
+		       pos : unsigned} $\rightarrow$ cmf
+	\If{pos == Tamaño(nodos)} return nueva\_cmf(0, vector de indice\_nodo vacío) \EndIf
 
-\State
-\Procedure{fronteraMaxima}{vector de nodo \&nodos, vector de int \&clique, unsigned pos} $\rightarrow$ tupla $<$ int , vector de int $>$
+	\State mejor\_cmf : cmf									\Ode{1}
 
-	\If{pos == Tamaño(nodos)} return tupla $<$ 0, vector de int vacio $>$ \EndIf
-	\State fronteraMax : int $\leftarrow$ 0; \Comment{Guarda la frontera máxima}
-	\State vector de int *maxClique $\leftarrow$ 0; \Comment{Guarda el clique máximo}
-	\For{i = pos To Tamaño(nodos)}
-		\If{parteDelClique(clique, nodos, i)}															\Ode{N*log N}
-			\State vector de int cliqueTmp $\leftarrow$ Copia(clique)						\Ode{N}
-			\State cliqueTmp.Agregar(i)																			\Ode{1}
-			\State fronteraRec : tupla $<$ int, vector de int $>$ $\leftarrow$ fronteraMaxima(nodos, cliqueTmp, i + 1)
-			\State tmpFrontera : int $\leftarrow$ frontera(nodos, cliqueTmp)		\Ode{N}
-			\If{max(tmpFrontera, fronteraRec.first) $>$ fronteraMax}						\Ode{1}
-				\State fronteraMax $\leftarrow$ max(tmpFrontera, fronteraRec.first)	\Ode{1}
-				\If{maxClique != 0} delete maxClique \EndIf												\Ode{1}
-				\If{tmpFrontera > fronteraRec.first}															\Ode{1}
-					\State maxClique : vector de int $\leftarrow$ Copia(cliqueTmp)		\Ode{N}
-				\Else
-					\State maxClique : vector de int $\leftarrow$ Copia(fronteraRec.second) \Ode{N}
-				\EndIf
+	\For{i = pos To Tamaño(nodos) -1}
+		\If{agregandoSigueSiendoClique(nodos, clique\_inicial, i)} \Ode{N * log N}
+			\State agregandoIesimo : cmf $\leftarrow$ nueva\_cmf(0, clique\_inicial)	\Ode{1}
+			\State indices\_nodos(agregandoIesimo).Agregar(i)	\Ode{1}
+			\State frontera(agregandoIesimo) $\leftarrow$
+					cardinalFrontera(nodos, indices\_nodos(agregandoIesimo))	\Ode{N}
+			\State subproblema : cmf $\leftarrow$
+					exacto\_rec(nodos, indices\_nodos(agregandoIesimo), i + 1)
+
+			\If{frontera(agregandoIesimo) $>$ frontera(subproblema)}
+				\State \&candidata : cmf $\leftarrow$ agregandoIesimo			\Ode{N}
+			\Else 
+				\State \&candidata : cmf $\leftarrow$ subproblema				\Ode{N}
+			\EndIf
+
+			\If{frontera(candidata) $>$ frontera(mejor\_cmf)} \Ode{1}
+				\State mejor\_cmf $\leftarrow$ candidata	\Ode{N}
 			\EndIf
 		\EndIf
 	\EndFor
-	\If{maxClique == 0}																								\Ode{1}
-		\State return tupla $<$ fronteraMax, vector de int vacio $>$					\Ode{1}
-	\Else
-		 \State res : vector de int $\leftarrow$ Copia(*maxClique)						\Ode{N}
-		\State delete maxClique																					\Ode{1}
-		\State return tupla $<$ fronteraMax, res $>$
-	\EndIf
 
+	\State return mejor\_cmf
 \EndProcedure
 \end{pseudo}
 
@@ -297,52 +295,51 @@ La implementación realizada para resolver el problema con una heurística golos
 A continuación presentamos el pseudocódigo:
 
 \begin{pseudo}
-\Procedure{enElclique}{vector de int \&clique, int pos} $\rightarrow$ bool
-	\For{i = 0 To Tamaño(clique) - 1}
-		\If{clique[i] == pos}																									\Ode{1}
-			\State return true
-		\EndIf
-	\EndFor
-	\State return false
-\EndProcedure
+\State \textbf{indice\_nodo} es int
+\State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto$<$indice\_nodo$>$ adyacentes$>$
+\State \textbf{cmf} es par$<$frontera : int, indices\_nodos : vector de indice\_nodo$>$
 \State
-\Procedure{golosa}{vector de nodo \&nodos} $\leftarrow$ tupla $<$ int, vector de int $>$
-	\State actual : int $\leftarrow$ NodoDeMaximaAdyacencia(nodos)									\Ode{N}
-	\State frontera : int $\leftarrow$ 0																					\Ode{1}
-	\State resultado : vector de int																						\Ode{1}
-	\State cambio : cambio $\leftarrow$ true																			\Ode{1}
-	\While{cambio == true}
-		\State maxFronteraLocal : int $\leftarrow$ 0 \Comment{Guarda la frontera máxima de los adyacentes} \Ode{1}
-	 	\State maxAdyacenteLocal : int \Comment{Guarda el índice del adyacente de frontera máxima} \Ode{1}
-	 	\State resultado.Agregar(actual); \Comment{Guardo en el resultado el vértice actual} \Ode{1}
-	 	\State cambio $\leftarrow$ false;
-	 	
-	 	\For{it : iterador dameUno(nodos[actual].adyacentes) To último elemento}
-	 		\If{parteDelClique(resultado, nodos, it) AND !enElclique(resultado, it)} \Ode{N*log N}
-	 			\State nuevaFronteraLocal : int $\leftarrow$ Tamaño(nodos[*it].adyacentes) - Tamaño(resultado) 																													\Ode{1}
-	 			\If{nuevaFronteraLocal $>$ maxFronteraLocal}													\Ode{1}
-	 				\State maxFronteraLocal $\leftarrow$ nuevaFronteraLocal							\Ode{1}
-	 				\State maxAdyacenteLocal = *it																		\Ode{1}
-	 				\State cambio = true;																						\Ode{1}
+\Procedure{golosa}{\&nodos : vector de nodo} $\rightarrow$ cmf
+	\State clique : cmf														\Ode{1}
+	\State actual : indice\_nodo $\leftarrow$ nodoDeMayorGrado(nodos)		\Ode{N}
+
+	\While{true}
+	 	\State indices\_nodos(clique).Agregar(actual);						\Ode{1}
+	 	\State candidato : indice\_nodo										\Ode{1}
+		\State aporteCandidato : int $\leftarrow$ 0							\Ode{1}
+
+	 	\For{it : iterator de nodos[actual].adyacentes ; Begin(it) To End(it)}
+
+	 		\State adyacente : indice\_nodo = *it							\Ode{1}
+	 		
+	 		\If{agregandoSigueSiendoClique(
+	 				nodos, indices\_nodos(clique), adyacente) \&\& \State
+	 		   !estaEnLaClique(indices\_nodos(clique), adyacente)}			\Ode{N*log N}
+
+	 			\State aporte : int $\leftarrow$ Tamaño(nodos[adyacente].adyacentes) -
+	 					     2 * Tamaño(indices\_nodos(clique))				\Ode{1}
+
+	 			\If{aporte $>$ aporteCandidato}								\Ode{1}
+	 				\State aporte : aporteCandidato							\Ode{1}
+	 				\State candidato $\leftarrow$ adyacente					\Ode{1}
 	 			\EndIf
 	 		\EndIf
 	 	\EndFor
-	 	\State actual $\leftarrow$ maxAdyacenteLocal															\Ode{1}
-	 	\If{!cambio} break \EndIf																								\Ode{1}
+	 	\If{aporteCandidato $>$ 0} actual $\leftarrow$ candidato			\Ode{1}
+	 	\Else
+	 		\State break
+	 	\EndIf
 	\EndWhile
- 	\For{i = 0 To Tamaño(resultado - 1}
- 		\State frontera $\leftarrow$ frontera + Tamaño(nodos[resultado[i]].adyacentes)	\Ode{1}
- 	\EndFor
- 	\State frontera $\leftarrow$ frontera - (Tamaño(resultado) - 1) * Tamaño(resultado \Ode{1}
-	\State return tupla $<$ frontera, resultado $>$
-\EndProcedure
 
+	\State frontera(clique) $\leftarrow$ cardinalFrontera(nodos, indices\_nodos(clique)) \Ode{N}
+	\State return clique
+\EndProcedure
 \end{pseudo}
 
 \subsection{Complejidad}
 Sea N cantidad de nodos en el grafo.
 
-En la función enElClique se tiene un ciclo de a lo sumo N veces (máximo clique), realizando operaciones O(1), por lo que la función tiene una complejidad de O(N).
+En la función estaEnLaClique se tiene un ciclo de a lo sumo N veces (máximo clique), realizando operaciones O(1), por lo que la función tiene una complejidad de O(N).
 
 En el algoritmo goloso, se cicla hasta que cambio sea igual a true. Como el algoritmo solo puede agregar nodos nuevos al clique, se ciclaran a lo sumo N veces.
 Dentro del ciclo del while se tiene un for que recorre todos los adyacentes del nodo que a lo sumo puede tener a todos los nodos del grafo como adyacentes, por lo que se cicla N veces.
@@ -351,6 +348,29 @@ Para finalizar, tiene un for que cicla a lo sumo N veces realizando operaciones 
 La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N).
 
 \subsection{Análisis de eficacia}
+Es posible determinar que el algoritmo goloso se desempeñará de forma ineficaz ante grafos que no incluyan al nodo de mayor grado en el clique de mayor frontera, ya que este siempre formará parte de la solución provista por el algoritmo. Esta solución empeora aun más, como podemos ver en el siguiente gráfico, si el nodo de grado máximo tiene adyacentes de grado 1, haciendo que el algoritmo no pueda explorar el grafo, debido a que al tomarlos como parte del clique solución, no mejorarán la frontera y no se tendran en cuenta.
+
+\begin{figure}[H]
+\includegraphics[width=80mm]{ejemploErrorGoloso.png}
+\caption{Las aristas de color rojo forman parte de la frontera encontrada por el algoritmo, mientras que las aristas de color azul forman la frontera máxima}
+\label{overflow}
+\end{figure}
+
+Analizando este grafo, puede encontrarse una familia, la cuál es posible manipular para conseguir una respuesta tan mala como se desee. Esta familia está compuesta por un nodo de grado máximo no incluido en la solución y una clique donde cada nodo tiene grado máximo posible (grado máximo - 1).
+
+Incrementando la cantidad de adyacentes del nodo de mayor grado (nodo de color rojo), podemos hacer que el verdadero clique (parte azul) crezca, pudiendo incrementar la diferencia entre la frontera encontrada por el algoritmo y la frontera máxima del grafo provista por una clique.
+
+Tomando \textbf{d} = nodo de grado máximo y \textbf{c} = tamaño de clique elegido para sección azul, obtenemos que es posible calcular la frontera máxima según el tamaño del clique elejido y del grado máximo que puede encontrarse en el grafo.
+
+La ecuación de la fronera es la siguiente: $f(c) = (d - (c - 1)) * c$.
+
+Buscamos el \textbf{c} máximo para los valores de d. $f'(c) = d - 2 * c + 1$ = 0 $\Leftrightarrow$ $c = (d + 1)/2$.
+
+Es posible corroborar que $c = (d + 1)/2$ es un máximo viendo: $f''((d + 1)/2) = -2 < 0$.
+
+Conociendo \textbf{c}, solo basta con hacer crecer el grado del nodo de mayor grado y conectarlo con un clique de tamaño $(d + 1)/2$ para obtener una diferencia de exactitud en tamaño de frontera de $(d - (c - 1)) * c$ - $d$, que se irá incrementado a medida que d crezca.
+
+Es posible notar que entre la solución encontrada (roja) y la solución verdadera (azul), puede existir cualquier grafo de por medio que no tenga un nodo de grado mayor a d, ni una clique con frontera mayor que la solución.
 
 \subsection{Performance}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -362,8 +382,112 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 
 \section{Heurística de búsqueda local}
 \subsection{Algoritmo}
+
+\begin{pseudo}
+
+\State \textbf{operacion} es enum $\lbrace$AGREGAR, ELIMINAR, INTERCAMBIAR$\rbrace$
+\State \textbf{indice\_nodo} es int
+\State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto de indice\_nodo adyacentes$>$
+\State \textbf{cmf} es par$<$int, vector de indice\_nodo$>$
+
+\State
+\Procedure{local}{vector de nodo nodos, vector de int cliqueInicial} $\rightarrow$ cmf
+	
+	\State operacion op 																		\Ode{1}
+	\State indice\_nodo nodoAAgregar															\Ode{1}
+	\State indice\_nodo nodoAEliminar															\Ode{1}
+	\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar								\Ode{1}
+	\State int aporte $\leftarrow$ 0															\Ode{1}
+
+	\State
+	\State \textbf{Operación Agregar}
+	\State
+	\State \textbf{Operación Intercambiar}
+	\State
+	\State \textbf{Operación Eliminar}
+	\State
+
+	\If{aporte == 0} break \EndIf																\Ode{1}
+
+  	\Switch{$op$}
+	    \Case{AGREGAR}
+		    \State indices\_nodos(solucion).push\_back(nodoAAgregar)
+		    \State break
+	    \EndCase
+
+	    \Case{ELIMINAR}
+		    \State indices\_nodos(solucion).erase(
+		    \State indices\_nodos(solucion).begin() + nodoAEliminar)
+		    \State break
+	    \EndCase
+
+	   	\Case{INTERCAMBIAR}
+		    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second
+	    \EndCase
+	\EndSwitch
+	\State
+	\State frontera(solucion) += aporte
+	\State return solucion
+
+\EndProcedure
+\State
+\State donde \textbf{Operación Agregar} es:
+\State
+		\For{unsigned: i = 0 To nodos.size}
+			\If{!estaEnLaClique(indices\_nodos(solucion), i) \&
+			   agregandoSigueSiendoClique(nodos, indices\_nodos(solucion), i)}
+
+				\State int aporteAgregar = nodos[i].adyacentes.size() - 2 * indices\_nodos(solucion).size()
+
+				\If{aporteAgregar $>$ aporte}
+					\State op $\leftarrow$ AGREGAR
+					\State nodoAAgregar $\leftarrow$ i
+					\State aporte $\leftarrow$ aporteAgregar
+				\EndIf
+			\EndIf
+		\EndFor
+
+\State
+\State donde \textbf{Operación Intercambiar} es:
+\State
+
+			\For{unsigned j = 0 To nodos.size()}
+				\If{!estaEnLaClique(indices\_nodos(solucion), j) \&
+				   intercambiandoSigueSiendoClique(
+						   nodos, indices\_nodos(solucion), i, j))}
+
+					\State int aporteJEsimo $\leftarrow$ nodos[j].adyacentes.size() -(indices\_nodos(solucion).size() - 1)
+
+					\State int aporteNeto $\leftarrow$ aporteJEsimo - aporteIEsimo
+
+					\If{aporteNeto $>$ aporte}
+						\State aporte $\leftarrow$ aporteNeto
+						\State op $\leftarrow$ INTERCAMBIAR
+						\State nodosAIntercambiar $\leftarrow$ make\_pair(i, j)
+					\EndIf
+				\EndIf
+			\EndFor		
+
+\State
+\State donde \textbf{Operación Eliminar} es:
+\State
+		\For{unsigned i = 0 To indices\_nodos(solucion).size}
+			\State indice\_nodo iEsimo $\leftarrow$ indices\_nodos(solucion)[i]
+			\State int aporteEliminar $\leftarrow$ 2 * (indices\_nodos(solucion).size() - 1) - nodos[iEsimo].adyacentes.size()
+
+			\If{aporteEliminar $>$ aporte}
+				\State op $\leftarrow$ ELIMINAR
+				\State odoAEliminar $\leftarrow$ i
+				\State aporte $\leftarrow$ aporteEliminar
+			\EndIf
+		\EndFor
+
+
+\end{pseudo}
+
 \subsection{Complejidad}
 \subsection{Análisis de eficacia}
+
 \subsection{Performance}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -375,6 +499,160 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 
 \section{Heurística de búsqueda Tabú}
 \subsection{Algoritmo}
+
+\begin{pseudo}
+
+\State \textbf{operacion} es enum $\lbrace$AGREGAR, ELIMINAR, INTERCAMBIAR$\rbrace$
+\State \textbf{indice\_nodo} es int
+\State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto de indice\_nodo adyacentes$>$
+\State \textbf{cmf} es par$<$int, vector de indice\_nodo$>$
+
+\State
+\Procedure{local}{vector de nodo nodos, vector de int cliqueInicial} $\rightarrow$ cmf
+	
+
+	\State operacion op 																		\Ode{1}
+	\State indice\_nodo nodoAAgregar															\Ode{1}
+	\State indice\_nodo nodoAEliminar															\Ode{1}
+	\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar								\Ode{1}
+	\State int aporte $\leftarrow$ -INF															\Ode{1}
+
+	\State
+	\State \textbf{Operación Agregar}
+	\State
+	\State \textbf{Operación Intercambiar}
+	\State
+	\State \textbf{Operación Eliminar}
+	\State
+
+	\If{aporte $<$= 0}
+
+			\If{!faseTabu}
+				\State mejorSolucion $\leftarrow$ solucion
+				\State faseTabu $\leftarrow$ true
+			\EndIf
+
+			\Switch{$op$}
+				\Case{AGREGAR}
+				    \State tabu.marcar(nodoAAgregar)
+				    \State break
+				\EndCase
+				\Case{ELIMINAR}
+					\State  tabu.marcar(nodoAEliminar)
+					\State break
+				\EndCase
+				\Case{INTERCAMBIAR} 
+					\State tabu.marcar(nodosAIntercambiar.first)
+				\EndCase
+			\EndSwitch
+
+			\State movimientosTabuRestantes--
+			\If{movimientosTabuRestantes == 0} return mejorSolucion
+			\EndIf
+		\Else
+			\If{faseTabu \& (aporte + frontera(solucion) $>$ frontera(mejorSolucion))}
+			faseTabu $\leftarrow$ false
+			movimientosTabuRestantes $\leftarrow$ movimientosTabu
+			\EndIf
+		\EndIf
+
+
+  	\Switch{$op$}
+	    \Case{AGREGAR}
+		    \State indices\_nodos(solucion).push\_back(nodoAAgregar)
+		    \State break
+	    \EndCase
+
+	    \Case{ELIMINAR}
+		    \State indices\_nodos(solucion).erase(
+		    \State indices\_nodos(solucion).begin() + nodoAEliminar)
+		    \State break
+	    \EndCase
+
+	   	\Case{INTERCAMBIAR}
+		    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second
+	    \EndCase
+	\EndSwitch
+	\State
+	\State frontera(solucion) += aporte
+	\State return solucion
+
+\EndProcedure
+\State
+\State donde \textbf{Operación Agregar} es:
+\State
+
+		\For{unsigned: i = 0 To nodos.size}
+			\If{tabu.es\_tabu(nodos[i].indice)}
+			\State continue
+			\EndIf
+			\If{!estaEnLaClique(indices\_nodos(solucion), i) \&
+			   agregandoSigueSiendoClique(nodos, indices\_nodos(solucion), i)}
+
+				\State int aporteAgregar = nodos[i].adyacentes.size() - 2 * indices\_nodos(solucion).size()
+
+				\If{aporteAgregar $>$ aporte}
+					\State op $\leftarrow$ AGREGAR
+					\State nodoAAgregar $\leftarrow$ i
+					\State aporte $\leftarrow$ aporteAgregar
+				\EndIf
+			\EndIf
+		\EndFor
+
+\State
+\State donde \textbf{Operación Intercambiar} es:
+\State
+
+			\For{unsigned i = 0 To indices\_nodos(solucion).size()}
+				\If{tabu.es\_tabu(nodos[i].indice)}
+					\State continue
+				\EndIf
+				
+				\State indice\_nodo iEsimo $\leftarrow$  indices\_nodos(solucion)[i];
+				\State int aporteIEsimo $\leftarrow$  nodos[iEsimo].adyacentes.size() -  (indices\_nodos(solucion).size() - 1);
+				
+				\For{unsigned j = 0 To nodos.size()}
+					\If{tabu.es\_tabu(nodos[j].indice)}
+						\State continue
+					\EndIf
+
+
+					\If{!estaEnLaClique(indices\_nodos(solucion), j) \&
+					   intercambiandoSigueSiendoClique(
+							   nodos, indices\_nodos(solucion), i, j))}
+
+						\State int aporteJEsimo $\leftarrow$ nodos[j].adyacentes.size() -(indices\_nodos(solucion).size() - 1)
+
+						\State int aporteNeto $\leftarrow$ aporteJEsimo - aporteIEsimo
+
+						\If{aporteNeto $>$ aporte}
+							\State aporte $\leftarrow$ aporteNeto
+							\State op $\leftarrow$ INTERCAMBIAR
+							\State nodosAIntercambiar $\leftarrow$ make\_pair(i, j)
+						\EndIf
+					\EndIf
+				\EndFor
+			\EndFor		
+
+\State
+\State donde \textbf{Operación Eliminar} es:
+\State
+		\For{unsigned i = 0 To indices\_nodos(solucion).size}
+			\If{tabu.es\_tabu(nodos[i].indice)}
+					\State continue
+			\EndIf
+			\State indice\_nodo iEsimo $\leftarrow$ indices\_nodos(solucion)[i]
+			\State int aporteEliminar $\leftarrow$ 2 * (indices\_nodos(solucion).size() - 1) - nodos[iEsimo].adyacentes.size()
+
+			\If{aporteEliminar $>$ aporte}
+				\State op $\leftarrow$ ELIMINAR
+				\State odoAEliminar $\leftarrow$ i
+				\State aporte $\leftarrow$ aporteEliminar
+			\EndIf
+		\EndFor
+
+\end{pseudo}
+
 \subsection{Complejidad}
 \subsection{Análisis de eficacia}
 \subsection{Performance}

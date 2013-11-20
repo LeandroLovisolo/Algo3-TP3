@@ -41,8 +41,8 @@ clean:
 common.o: src/common/common.cpp src/common/common.h
 	$(OBJ) src/common/common.cpp
 
-gtest-all.o:
-	$(OBJ) -I$(GTEST_DIR) -c $(GTEST_DIR)/src/gtest-all.cc
+familias.o: src/familias.cpp src/familias.h src/common/common.h
+	$(OBJ) src/familias.cpp
 
 ###############################################################################
 # Exacto                                                                      #
@@ -102,6 +102,15 @@ tabu_main.o: src/tabu/tabu.h src/tabu/tabu_main.cpp
 
 tests: src/tests.cpp gtest-all.o familias.o common.o
 	$(BIN_TEST)
+
+gtest-all.o:
+	$(OBJ) -I$(GTEST_DIR) -c $(GTEST_DIR)/src/gtest-all.cc
 	
-familias.o: src/familias.cpp src/familias.h src/common/common.h
-	$(OBJ) src/familias.cpp
+###############################################################################
+# Informe                                                                       #
+###############################################################################
+
+informe.pdf: tex/*.tex
+	cd tex; pdflatex -interactive=nonstopmode -halt-on-error informe.tex
+	cd tex; pdflatex -interactive=nonstopmode -halt-on-error informe.tex
+	cp tex/informe.pdf .
