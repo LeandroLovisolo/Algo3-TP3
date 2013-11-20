@@ -34,7 +34,7 @@ inline vector<indice_nodo>& indices_nodos(cmf& c) { return c.second; }
 int cardinalFrontera(const vector<nodo> &nodos,
 		             const vector<indice_nodo> &clique);
 bool estaEnLaClique(const vector<indice_nodo> &clique, indice_nodo nodo);
-bool sonAdyacentes(nodo &m, nodo &n);
+bool sonAdyacentes(const nodo &m, const nodo &n);
 bool agregandoSigueSiendoClique(const vector<nodo> &nodos,
 		                        const vector<indice_nodo> &clique,
 		                        indice_nodo nodo);
