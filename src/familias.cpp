@@ -57,3 +57,108 @@ vector<nodo> complemento(const vector<nodo> &g) {
 vector<nodo> lattice(int m, int n) {
 	return producto_cartesiano(k(m), k(n));
 }
+
+// Genera grafo bipartito completo
+vector<nodo> knm(int n, int m) {
+	vector<nodo> nodos(n + m);
+	// Índices correspondientes
+	for (int i = 0; i < n + m; ++i) {
+		nodos[i].indice = i;
+	}
+
+	//Nodos adyacencias para bipartito completo
+	for (int i = 0; i < n; ++i) {
+		for (int j = n; j < m; ++j) {
+			nodos[i].adyacentes.insert(j);
+			nodos[j].adyacentes.insert(i);
+		}
+	}
+	return nodos;
+}
+
+
+// Genera claw o estrella, http://mathworld.wolfram.com/ClawGraph.html
+vector<nodo> claw(int n) {
+	return knm(1,n);
+}
+
+// Graph union http://mathworld.wolfram.com/GraphUnion.html
+// Unión disjunta, V = V1 U V2 y X = X1 U X2
+vector<nodo> graph_union(const vector<nodo> &G1, const vector<nodo> &G2) {
+	vector<nodo> Gunion(G1.size() + G2.size());
+	// Agrego G1
+	for (unsigned i = 0; i < G1.size(); ++i) {
+		Gunion[i] = G1[i];
+	}
+	// Agrego G2
+	for (unsigned i = G1.size(); i < G1.size() + G2.size(); ++i)	{
+		Gunion[i].indice = i;
+		// Actualizo adyacencias
+		for(set<indice_nodo>::iterator it = G2[i - G1.size()].adyacentes.begin(); it != G2[i - G1.size()].adyacentes.end(); ++it) {
+			Gunion[i].adyacentes.insert(*it + G1.size());
+		}
+	}
+	return Gunion;
+}
+
+// Ver http://mathworld.wolfram.com/GraphJoin.html
+// G = G1 + G2, todos los de G1 adyacentes a todos los de G2
+vector<nodo> graph_join(const vector<nodo> &G1, const vector<nodo> &G2) {
+	vector<nodo> Gunion = graph_union(G1, G2);
+	for (unsigned i = 0; i < G1.size(); ++i) {
+		for(unsigned j = 0; j < G2.size(); ++j) {
+			Gunion[i].adyacentes.insert(G1.size() + j);
+			Gunion[G1.size() + j].adyacentes.insert(i);
+		}
+	}
+	return Gunion;
+}
+
+// Ver http://www.graphclasses.org/smallgraphs.html#K2Uclaw
+vector<nodo> kn_union_claw_m_complemento(int n, int m) {
+	vector<nodo> kn = k(n);
+	vector<nodo> k1_n = claw(m);
+	vector<nodo> Gunion = graph_union(kn, k1_n);
+	return complemento(Gunion);
+}
+
+// Path graph http://mathworld.wolfram.com/PathGraph.html
+vector<nodo> path(int n) {
+	vector<nodo> Gpath(n);
+	for(unsigned i = 1; i < (unsigned) n; ++i) {
+		Gpath[i].indice = i;
+		Gpath[i].adyacentes.insert(i - 1);
+		Gpath[i - 1].adyacentes.insert(i);
+	}
+	return Gpath;
+}
+
+// Lollipop graph http://mathworld.wolfram.com/LollipopGraph.html
+// n para el kn, m para el largo del path, m y n > 0
+vector<nodo> lollipop(int n, int m) {
+	vector<nodo> kn = k(n);
+	// Agrego el path
+	vector<nodo> Gpath = path(m);
+	vector<nodo> Gunion = graph_union(kn, Gpath);
+	//Conecto el path al kn
+	Gunion[n].adyacentes.insert(n - 1);
+	Gunion[n - 1].adyacentes.insert(n);
+	return Gunion;
+}
+
+// Ver http://mathworld.wolfram.com/FanGraph.html
+// F n,m  = Kn complemento + Path m
+vector<nodo> fan(int n, int m) {
+	vector<nodo> kn = k(n);
+	vector<nodo> knComp = complemento(kn);
+	vector<nodo> Pgraph = path(m);
+	return graph_join(knComp, Pgraph);
+}
+
+// Grafo ciclo
+vector<nodo> cicle(int n) {
+	vector<nodo> Cgraph = path(n);
+	Cgraph[n -1].adyacentes.insert(0);
+	Cgraph[0].adyacentes.insert(n - 1);
+	return Cgraph;
+}

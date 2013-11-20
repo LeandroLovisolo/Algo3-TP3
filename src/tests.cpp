@@ -1,5 +1,5 @@
 #include "familias.h"
-
+#include <iostream>
 #include "gtest/gtest.h"
 
 bool sonDoblementeAdyacentes(const nodo &m, const nodo &n) {
@@ -16,6 +16,56 @@ TEST(familias, k) {
 	ASSERT_TRUE(sonDoblementeAdyacentes(k4[1], k4[2]));
 	ASSERT_TRUE(sonDoblementeAdyacentes(k4[1], k4[3]));
 	ASSERT_TRUE(sonDoblementeAdyacentes(k4[2], k4[3]));
+}
+
+TEST(familias, graph_union) {
+	vector<nodo> k4 = k(4);
+	vector<nodo> k3 = k(3);
+	vector<nodo> Gunion = graph_union(k3, k4);
+	ASSERT_EQ(7, Gunion.size());
+	//Existen las mismas adyacencias para k3?
+	for (unsigned i = 0; i < k3.size(); ++i) {
+		// Misma cantidad de adyacentes
+		ASSERT_EQ(Gunion[i].adyacentes.size(), k3[i].adyacentes.size());
+		// Mismos adyacentes
+		for(set<indice_nodo>::iterator it = Gunion[i].adyacentes.begin(); it != Gunion[i].adyacentes.end(); ++it) {
+			ASSERT_TRUE(k3[i].adyacentes.find(*it) != k3[i].adyacentes.end());
+		}
+	}
+	// Existen las mismas adyacencias para k4?
+	for (unsigned i = k4.size(); i < Gunion.size(); ++i) {
+		// Misma cantidad de adyacentes
+		ASSERT_EQ(Gunion[i].adyacentes.size(), k4[i - k4.size()].adyacentes.size());
+		// Mismos adyacentes
+		for(set<indice_nodo>::iterator it = Gunion[i].adyacentes.begin(); it != Gunion[i].adyacentes.end(); ++it) {
+			ASSERT_TRUE(k4[i - k3.size()].adyacentes.find(*it - k3.size()) != k4[i - k3.size()].adyacentes.end());
+		}
+	}
+}
+
+TEST(familias, graph_join) {
+	vector<nodo> k4 = k(4);
+	vector<nodo> k3 = k(3);
+	vector<nodo> Gjoin = graph_join(k3, k4);
+	ASSERT_EQ(Gjoin.size(), k3.size() + k4.size());
+	//Veo que todos los nodos de k3 sean adyacentes a los de k4
+	for (unsigned i = 0; i < k3.size(); ++i) {
+		// Cantidad correcta de adyacentes
+		ASSERT_EQ(Gjoin[i].adyacentes.size(), k3[i].adyacentes.size() + k4.size());
+		// Adyacentes correctos
+		for(unsigned j = k3.size(); j < Gjoin.size(); ++j) {
+			ASSERT_TRUE(Gjoin[i].adyacentes.find(j) != Gjoin[i].adyacentes.end());
+		}
+	}
+	//Veo que los nodos que pertenecían al k4 sean adyacentes a los del k3
+	for (unsigned i = k3.size(); i < Gjoin.size(); ++i) {
+		// Cantidad correcta de adyacentes
+		ASSERT_EQ(Gjoin[i].adyacentes.size(), k4[i - k3.size()].adyacentes.size() + k3.size());
+		// Adyacentes correctos
+		for(unsigned j = 0; j < k3.size(); ++j) {
+			ASSERT_TRUE(Gjoin[i].adyacentes.find(j) != Gjoin[i].adyacentes.end());
+		}
+	}
 }
 
 TEST(familias, producto_cartesiano) {
