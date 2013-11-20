@@ -11,7 +11,7 @@ GTEST_DIR = lib/gtest-1.6.0
 CPPFLAGS += -Isrc/common -I$(GTEST_DIR)/include
 
 # Flags del compilador C++.
-CXXFLAGS += -g -Wall -Wextra -std=c++0x
+CXXFLAGS += -g -Wall -Wno-comment -Wextra -std=c++0x
 
 # Comando para generar código objeto (.o)
 OBJ       = $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c
@@ -100,5 +100,8 @@ tabu_main.o: src/tabu/tabu.h src/tabu/tabu_main.cpp
 # Tests                                                                       #
 ###############################################################################
 
-tests: src/tests.cpp gtest-all.o
+tests: src/tests.cpp gtest-all.o familias.o common.o
 	$(BIN_TEST)
+	
+familias.o: src/familias.cpp src/familias.h src/common/common.h
+	$(OBJ) src/familias.cpp
