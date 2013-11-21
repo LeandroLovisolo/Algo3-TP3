@@ -100,7 +100,7 @@ tabu_main.o: src/tabu/tabu.h src/tabu/tabu_main.cpp
 # Tests                                                                       #
 ###############################################################################
 
-tests: src/tests.cpp gtest-all.o familias.o common.o
+tests: src/tests.cpp gtest-all.o familias.o common.o exacto.o
 	$(BIN_TEST)
 
 gtest-all.o:
