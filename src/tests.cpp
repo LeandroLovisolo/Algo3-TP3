@@ -68,6 +68,30 @@ TEST(familias, graph_join) {
 	}
 }
 
+TEST(familias, knm) {
+	vector<nodo> KnmGraph = knm(5, 8);
+	// Los índices están bien puestos
+	for (unsigned i = 0; i < KnmGraph.size(); ++i) {
+		ASSERT_EQ(KnmGraph[i].indice, i);
+	}
+	
+	// V1 está conectada con todo V2
+	for (unsigned i = 0; i < 5; ++i) {
+		ASSERT_EQ(KnmGraph[i].adyacentes.size(), 8);
+		for (unsigned j = 5; j < KnmGraph.size(); ++j) {
+			ASSERT_TRUE(KnmGraph[i].adyacentes.find(j) != KnmGraph[i].adyacentes.end());
+		}
+	}
+
+	//V2 está conectado con todo V1
+	for (unsigned i = 5; i < KnmGraph.size(); ++i) {
+		ASSERT_EQ(KnmGraph[i].adyacentes.size(), 5);
+		for (unsigned j = 0; j < 5; ++j) {
+			ASSERT_TRUE(KnmGraph[i].adyacentes.find(j) != KnmGraph[i].adyacentes.end());
+		}
+	}
+}
+
 TEST(familias, producto_cartesiano) {
 	// Grafo *-*
 	vector<nodo> g(2);

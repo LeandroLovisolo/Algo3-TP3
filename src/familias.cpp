@@ -68,7 +68,7 @@ vector<nodo> knm(int n, int m) {
 
 	//Nodos adyacencias para bipartito completo
 	for (int i = 0; i < n; ++i) {
-		for (int j = n; j < m; ++j) {
+		for (int j = n; j < n + m; ++j) {
 			nodos[i].adyacentes.insert(j);
 			nodos[j].adyacentes.insert(i);
 		}
