@@ -1,6 +1,7 @@
 #include "familias.h"
 #include <iostream>
 #include "gtest/gtest.h"
+#include "exacto/exacto.h"
 
 bool sonDoblementeAdyacentes(const nodo &m, const nodo &n) {
 	return sonAdyacentes(m, n) && sonAdyacentes(n, m);
@@ -90,6 +91,35 @@ TEST(familias, knm) {
 			ASSERT_TRUE(KnmGraph[i].adyacentes.find(j) != KnmGraph[i].adyacentes.end());
 		}
 	}
+}
+
+TEST(familias, knclawCalculoEcuacion) {
+	int n = 4, m = 2;
+	vector<nodo> grafo = kn_union_claw_m_complemento(n,m);
+	// for (unsigned i = 0; i < grafo.size(); ++i) {
+	// 	cout << "Nodo " << i << endl;
+	// 	for (set<indice_nodo>::iterator it = grafo[i].adyacentes.begin(); it != grafo[i].adyacentes.end(); ++it) {
+	// 		cout << *it << " ";
+	// 	}
+	// 	cout << endl;
+	// }
+	cmf sol = exacto(grafo);
+	if(n >= m) {
+		int c = m;
+		int ecuacion = n*m;
+		ASSERT_EQ(c, sol.second.size());
+		ASSERT_EQ(sol.first, ecuacion);
+	}
+	else {
+		int c = (m+n+1)/2;
+		int ecuacion = (m - c)*c + n * c;
+		ASSERT_EQ(sol.first, ecuacion);
+		ASSERT_EQ(sol.second.size(), c);
+	}
+
+	// for (unsigned i = 0; i < sol.second.size(); ++i){
+	// 	cout << (sol.second)[i] << " " << endl;
+	// }
 }
 
 TEST(familias, producto_cartesiano) {
