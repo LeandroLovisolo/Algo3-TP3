@@ -4,7 +4,7 @@ using namespace std;
 
 enum operacion { AGREGAR, ELIMINAR, INTERCAMBIAR };
 
-cmf local(vector<nodo> &nodos, const vector<indice_nodo> &cliqueInicial) {
+cmf local(const vector<nodo> &nodos, const vector<indice_nodo> &cliqueInicial) {
 	cmf solucion = nueva_cmf(cardinalFrontera(nodos, cliqueInicial),
 			                 cliqueInicial);
 
