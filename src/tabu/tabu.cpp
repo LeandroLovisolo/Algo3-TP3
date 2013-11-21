@@ -134,7 +134,7 @@ cmf tabu(const vector<nodo> &nodos,
 
 		// Operación ELIMINAR
 		for(unsigned i = 0; i < indices_nodos(solucion).size(); ++i) {
-			if(tabu.es_tabu(nodos[i].indice)) continue;
+			if(tabu.es_tabu(indices_nodos(solucion)[i])) continue;
 
 			// Calculo cuántas aristas agrega a la frontera el eliminar el
 			// i-ésimo nodo de la clique.

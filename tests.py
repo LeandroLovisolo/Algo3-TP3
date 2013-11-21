@@ -1,9 +1,10 @@
+#!/usr/bin/env python2
+# coding: utf-8
+
 ###############################################################################
 # Tests PROVISORIOS para verificar que no se alteren los outputs de los       #
 # algoritmos luego de hacer una modificación.                                 #
 ###############################################################################
-
-#!/usr/bin/env python2
 
 import os
 from subprocess import Popen, PIPE

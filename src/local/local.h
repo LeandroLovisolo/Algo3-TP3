@@ -3,6 +3,6 @@
 
 #include "common.h"
 
-cmf local(vector<nodo> &nodos, const vector<indice_nodo> &cliqueInicial);
+cmf local(const vector<nodo> &nodos, const vector<indice_nodo> &cliqueInicial);
 
 #endif // LOCAL_H
