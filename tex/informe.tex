@@ -399,13 +399,13 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 \State \textbf{cmf} es par$<$int, vector de indice\_nodo$>$
 
 \State
-\Procedure{local}{vector de nodo nodos, vector de int cliqueInicial} $\rightarrow$ cmf
+\Procedure{local}{nodos : vector de nodo, cliqueInicial : vector de int} $\rightarrow$ cmf
 	
-	\State operacion op 																		\Ode{1}
-	\State indice\_nodo nodoAAgregar															\Ode{1}
-	\State indice\_nodo nodoAEliminar															\Ode{1}
+	\State op : operaciones 																	\Ode{1}
+	\State nodoAAgregar	: indice\_nodo 															\Ode{1}
+	\State nodoAEliminar : indice\_nodo															\Ode{1}
 	\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar								\Ode{1}
-	\State int aporte $\leftarrow$ 0															\Ode{1}
+	\State aporte : int  $\leftarrow$ 0															\Ode{1}
 
 	\State
 	\State \textbf{Operación Agregar}
@@ -419,38 +419,38 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 
   	\Switch{$op$}
 	    \Case{AGREGAR}
-		    \State indices\_nodos(solucion).push\_back(nodoAAgregar)
+		    \State indices\_nodos(solucion).Agregar(nodoAAgregar)								\Ode{1}
 		    \State break
 	    \EndCase
 
 	    \Case{ELIMINAR}
-		    \State indices\_nodos(solucion).erase(
-		    \State indices\_nodos(solucion).begin() + nodoAEliminar)
+		    \State indices\_nodos(solucion).Eliminar(indices\_nodos(solucion).begin() + nodoAEliminar)	\Ode{N}
 		    \State break
 	    \EndCase
 
 	   	\Case{INTERCAMBIAR}
-		    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second
+		    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second	\Ode{1}
 	    \EndCase
 	\EndSwitch
 	\State
-	\State frontera(solucion) += aporte
+	\State frontera(solucion) $\leftarrow$ frontera(solucion) + aporte 							\Ode{1}
 	\State return solucion
 
 \EndProcedure
 \State
 \State donde \textbf{Operación Agregar} es:
 \State
-		\For{unsigned: i = 0 To nodos.size}
+		\For{i = 0 To Tamaño(nodos)}
 			\If{!estaEnLaClique(indices\_nodos(solucion), i) \&
-			   agregandoSigueSiendoClique(nodos, indices\_nodos(solucion), i)}
+			   \State agregandoSigueSiendoClique(nodos, indices\_nodos(solucion), i)}								\Ode{N*log N}
 
-				\State int aporteAgregar = nodos[i].adyacentes.size() - 2 * indices\_nodos(solucion).size()
+				\State aporteAgregar : int $\leftarrow$ Tamaño(nodos[i].adyacentes) -
+				\State 2 * Tamaño(indices\_nodos(solucion))															\Ode{1}
 
-				\If{aporteAgregar $>$ aporte}
-					\State op $\leftarrow$ AGREGAR
-					\State nodoAAgregar $\leftarrow$ i
-					\State aporte $\leftarrow$ aporteAgregar
+				\If{aporteAgregar $>$ aporte}																		\Ode{1}
+					\State op $\leftarrow$ AGREGAR 																	\Ode{1}
+					\State nodoAAgregar $\leftarrow$ i 																\Ode{1}
+					\State aporte $\leftarrow$ aporteAgregar														\Ode{1}
 				\EndIf
 			\EndIf
 		\EndFor
@@ -459,19 +459,19 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 \State donde \textbf{Operación Intercambiar} es:
 \State
 
-			\For{unsigned j = 0 To nodos.size()}
+			\For{j = 0 To Tamaño(nodos)}
 				\If{!estaEnLaClique(indices\_nodos(solucion), j) \&
-				   intercambiandoSigueSiendoClique(
-						   nodos, indices\_nodos(solucion), i, j))}
+				   \State intercambiandoSigueSiendoClique(nodos, indices\_nodos(solucion), i, j))}							\Ode{N*log N}
 
-					\State int aporteJEsimo $\leftarrow$ nodos[j].adyacentes.size() -(indices\_nodos(solucion).size() - 1)
+					\State aporteJEsimo : int $\leftarrow$ Tamaño(nodos[j].adyacentes) -
+					\State (Tamaño(indices\_nodos(solucion)) - 1)															\Ode{1}
 
-					\State int aporteNeto $\leftarrow$ aporteJEsimo - aporteIEsimo
+					\State aporteNeto : int $\leftarrow$ aporteJEsimo - aporteIEsimo										\Ode{1}
 
-					\If{aporteNeto $>$ aporte}
-						\State aporte $\leftarrow$ aporteNeto
-						\State op $\leftarrow$ INTERCAMBIAR
-						\State nodosAIntercambiar $\leftarrow$ make\_pair(i, j)
+					\If{aporteNeto $>$ aporte}																				\Ode{1}
+						\State aporte $\leftarrow$ aporteNeto																\Ode{1}
+						\State op $\leftarrow$ INTERCAMBIAR 																\Ode{1}
+						\State nodosAIntercambiar $\leftarrow$ $<$i, j$>$ 													\Ode{1}
 					\EndIf
 				\EndIf
 			\EndFor		
@@ -479,14 +479,15 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 \State
 \State donde \textbf{Operación Eliminar} es:
 \State
-		\For{unsigned i = 0 To indices\_nodos(solucion).size}
-			\State indice\_nodo iEsimo $\leftarrow$ indices\_nodos(solucion)[i]
-			\State int aporteEliminar $\leftarrow$ 2 * (indices\_nodos(solucion).size() - 1) - nodos[iEsimo].adyacentes.size()
+		\For{i = 0 To Tamaño(indices\_nodos(solucion))}
+			\State iEsimo : indice\_nodo$\leftarrow$ indices\_nodos(solucion)[i]											\Ode{1}
+			\State aporteEliminar : int $\leftarrow$ 2 * (Tamaño(indices\_nodos(solucion)) - 1) - 
+			\State Tamaño(nodos[iEsimo].adyacentes)																			\Ode{1}
 
-			\If{aporteEliminar $>$ aporte}
-				\State op $\leftarrow$ ELIMINAR
-				\State odoAEliminar $\leftarrow$ i
-				\State aporte $\leftarrow$ aporteEliminar
+			\If{aporteEliminar $>$ aporte}																					\Ode{1}
+				\State op $\leftarrow$ ELIMINAR 																			\Ode{1}
+				\State odoAEliminar $\leftarrow$ i 																			\Ode{1}
+				\State aporte $\leftarrow$ aporteEliminar 																	\Ode{1}
 			\EndIf
 		\EndFor
 
@@ -514,9 +515,8 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 \State \textbf{indice\_nodo} es int
 \State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto de indice\_nodo adyacentes$>$
 \State \textbf{cmf} es par$<$int, vector de indice\_nodo$>$
-
 \State
-\Procedure{local}{vector de nodo nodos, vector de int cliqueInicial} $\rightarrow$ cmf
+\Procedure{tabu}{nodos : vector de nodo, cliqueInicial : vector de int, movimientosTabu : int, cantidadDeNodosTabu : int} $\rightarrow$ cmf
 	
 
 	\State operacion op 																		\Ode{1}
@@ -533,76 +533,74 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 	\State \textbf{Operación Eliminar}
 	\State
 
-	\If{aporte $<$= 0}
-
-			\If{!faseTabu}
-				\State mejorSolucion $\leftarrow$ solucion
-				\State faseTabu $\leftarrow$ true
+	\If{aporte $<$= 0}																			\Ode{1}
+			\If{!faseTabu}																		\Ode{1}
+				\State mejorSolucion $\leftarrow$ mejorSolucion 								\Ode{N}
+				\State faseTabu $\leftarrow$ true 												\Ode{1}
 			\EndIf
 
 			\Switch{$op$}
 				\Case{AGREGAR}
-				    \State tabu.marcar(nodoAAgregar)
+				    \State tabu.marcar(nodoAAgregar)										 	\Ode{log M}	
 				    \State break
 				\EndCase
 				\Case{ELIMINAR}
-					\State  tabu.marcar(nodoAEliminar)
+					\State  tabu.marcar(nodoAEliminar) 											\Ode{log M}
 					\State break
 				\EndCase
 				\Case{INTERCAMBIAR} 
-					\State tabu.marcar(nodosAIntercambiar.first)
+					\State tabu.marcar(nodosAIntercambiar.first)								\Ode{log M}
 				\EndCase
 			\EndSwitch
 
-			\State movimientosTabuRestantes--
+			\State movimientosTabuRestantes--													\Ode{1}
 			\If{movimientosTabuRestantes == 0} return mejorSolucion
 			\EndIf
 		\Else
-			\If{faseTabu \& (aporte + frontera(solucion) $>$ frontera(mejorSolucion))}
-			faseTabu $\leftarrow$ false
-			movimientosTabuRestantes $\leftarrow$ movimientosTabu
+			\If{faseTabu \& (aporte + frontera(solucion) $>$ frontera(mejorSolucion))}          \Ode{1}
+				\State faseTabu $\leftarrow$ false 												\Ode{1}
+				\State movimientosTabuRestantes $\leftarrow$ movimientosTabu 					\Ode{1}
 			\EndIf
 		\EndIf
 
 
   	\Switch{$op$}
 	    \Case{AGREGAR}
-		    \State indices\_nodos(solucion).push\_back(nodoAAgregar)
+		    \State indices\_nodos(solucion).Agregar(nodoAAgregar) 								\Ode{1}
 		    \State break
 	    \EndCase
 
 	    \Case{ELIMINAR}
-		    \State indices\_nodos(solucion).erase(
-		    \State indices\_nodos(solucion).begin() + nodoAEliminar)
+		    \State indices\_nodos(solucion).Eliminar(indices\_nodos(solucion).begin() + nodoAEliminar) \Ode{N}
 		    \State break
 	    \EndCase
 
 	   	\Case{INTERCAMBIAR}
-		    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second
+		    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second    \Ode{1}
 	    \EndCase
 	\EndSwitch
 	\State
-	\State frontera(solucion) += aporte
-	\State return solucion
+	\State frontera(solucion) $\leftarrow$ frontera(solucion) + aporte 								\Ode{1}
+	\State return solucion 																			\Ode{1}
 
 \EndProcedure
-\State
+
 \State donde \textbf{Operación Agregar} es:
 \State
-
-		\For{unsigned: i = 0 To nodos.size}
-			\If{tabu.es\_tabu(nodos[i].indice)}
+		\For{i = 0 To Tamaño(nodos)}
+			\If{tabu.es\_tabu(nodos[i].indice)}																		\Ode{log M}
 			\State continue
 			\EndIf
 			\If{!estaEnLaClique(indices\_nodos(solucion), i) \&
-			   agregandoSigueSiendoClique(nodos, indices\_nodos(solucion), i)}
+			   \State agregandoSigueSiendoClique(nodos, indices\_nodos(solucion), i)}								\Ode{N*log N}
 
-				\State int aporteAgregar = nodos[i].adyacentes.size() - 2 * indices\_nodos(solucion).size()
+				\State aporteAgregar : int $\leftarrow$ Tamaño(nodos[i].adyacentes) - 
+				\State 2 * Tamaño(indices\_nodos(solucion))															\Ode{1}
 
-				\If{aporteAgregar $>$ aporte}
-					\State op $\leftarrow$ AGREGAR
-					\State nodoAAgregar $\leftarrow$ i
-					\State aporte $\leftarrow$ aporteAgregar
+				\If{aporteAgregar $>$ aporte}																		\Ode{1}
+					\State op $\leftarrow$ AGREGAR 																	\Ode{1}
+					\State nodoAAgregar $\leftarrow$ i 																\Ode{1}
+					\State aporte $\leftarrow$ aporteAgregar														\Ode{1}
 				\EndIf
 			\EndIf
 		\EndFor
@@ -611,53 +609,45 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 \State donde \textbf{Operación Intercambiar} es:
 \State
 
-			\For{unsigned i = 0 To indices\_nodos(solucion).size()}
-				\If{tabu.es\_tabu(nodos[i].indice)}
+			\For{j = 0 To Tamaño(nodos)}
+				\If{tabu.es\_tabu(nodos[i].indice)}																	\Ode{log M}
 					\State continue
 				\EndIf
-				
-				\State indice\_nodo iEsimo $\leftarrow$  indices\_nodos(solucion)[i];
-				\State int aporteIEsimo $\leftarrow$  nodos[iEsimo].adyacentes.size() -  (indices\_nodos(solucion).size() - 1);
-				
-				\For{unsigned j = 0 To nodos.size()}
-					\If{tabu.es\_tabu(nodos[j].indice)}
-						\State continue
+				\If{!estaEnLaClique(indices\_nodos(solucion), j) \&
+				   \State intercambiandoSigueSiendoClique(nodos, indices\_nodos(solucion), i, j))}					\Ode{N*log N}
+
+					\State aporteJEsimo : int $\leftarrow$ Tamaño(nodos[j].adyacentes) - 
+					\State (Tamaño(indices\_nodos(solucion)) - 1)													\Ode{1}
+
+					\State aporteNeto : int $\leftarrow$ aporteJEsimo - aporteIEsimo								\Ode{1}
+
+					\If{aporteNeto $>$ aporte}																		\Ode{1}
+						\State aporte $\leftarrow$ aporteNeto														\Ode{1}
+						\State op $\leftarrow$ INTERCAMBIAR 														\Ode{1}
+						\State nodosAIntercambiar $\leftarrow$ $<$i, j$>$ 											\Ode{1}
 					\EndIf
-
-
-					\If{!estaEnLaClique(indices\_nodos(solucion), j) \&
-					   intercambiandoSigueSiendoClique(
-							   nodos, indices\_nodos(solucion), i, j))}
-
-						\State int aporteJEsimo $\leftarrow$ nodos[j].adyacentes.size() -(indices\_nodos(solucion).size() - 1)
-
-						\State int aporteNeto $\leftarrow$ aporteJEsimo - aporteIEsimo
-
-						\If{aporteNeto $>$ aporte}
-							\State aporte $\leftarrow$ aporteNeto
-							\State op $\leftarrow$ INTERCAMBIAR
-							\State nodosAIntercambiar $\leftarrow$ make\_pair(i, j)
-						\EndIf
-					\EndIf
-				\EndFor
+				\EndIf
 			\EndFor		
 
 \State
 \State donde \textbf{Operación Eliminar} es:
 \State
-		\For{unsigned i = 0 To indices\_nodos(solucion).size}
-			\If{tabu.es\_tabu(nodos[i].indice)}
-					\State continue
+		\For{i = 0 To Tamaño(indices\_nodos(solucion))}
+			\If{tabu.es\_tabu(nodos[i].indice)}																		\Ode{log M}
+				  \State continue
 			\EndIf
-			\State indice\_nodo iEsimo $\leftarrow$ indices\_nodos(solucion)[i]
-			\State int aporteEliminar $\leftarrow$ 2 * (indices\_nodos(solucion).size() - 1) - nodos[iEsimo].adyacentes.size()
+			\State iEsimo : indice\_nodo$\leftarrow$ indices\_nodos(solucion)[i]									\Ode{1}
+			\State aporteEliminar : int $\leftarrow$ 2 * (Tamaño(indices\_nodos(solucion)) - 1) -
+			\State Tamaño(nodos[iEsimo].adyacentes)																	\Ode{1}
 
-			\If{aporteEliminar $>$ aporte}
-				\State op $\leftarrow$ ELIMINAR
-				\State odoAEliminar $\leftarrow$ i
-				\State aporte $\leftarrow$ aporteEliminar
+			\If{aporteEliminar $>$ aporte}																			\Ode{1}
+				\State op $\leftarrow$ ELIMINAR 																	\Ode{1}
+				\State odoAEliminar $\leftarrow$ i 																	\Ode{1}
+				\State aporte $\leftarrow$ aporteEliminar 															\Ode{1}
 			\EndIf
 		\EndFor
+
+\State
 
 \end{pseudo}
 
