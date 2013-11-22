@@ -715,11 +715,34 @@ Para grafos más densos el crecimiento es mucho más pronunciado y el experiment
 
 \subsection{Grafos de entrenamiento}
 
-Llamamos ``grafos de entrenamiento'' al conjunto de grafos para los que se optimizaron los parámetros de las heurísticas.
+Llamamos ``grafos de entrenamiento'' al conjunto de grafos para los que se optimizaron los parámetros de las heurísticas. Este conjunto está compuesto por instancias de las siguientes familias de grafos:
 
+\begin{itemize}
+	\item Lattice (producto cartesiano entre grafos $K_m$ y $K_n$)
+	\item $\overline{K_n \cup Claw_m}$
+	\item Lollipop (depende de parámetros $m$ y $n$)
+	\item Fan ($\overline{K_m} + P_n$)
+	\item Ninja (depende de un parámetro $n$)
+\end{itemize}
+
+El conjunto se construye generando una instancia de cada familia para cada par $(m, n) \in [1, 10] \times [1, 10]$ en el caso de las familias que dependen de dos parámetros, y una instancia por cada $n \in [1, 10]$ para el caso de las familias que dependen de un único parámetro. De esta forma se obtiene un total de 410 grafos.
+
+Luego procedemos a evaluar distintos parámetros de cada heurística y las aplicamos contra el conjunto de grafos de entrenamiento para hallar la mejor. Para la heurística de búsqueda local, se evalúan como soluciones iniciales la clique comprendida por el nodo de mayor grado y la clique devuelta por la heurística golosa. Para la heurística de búsqueda tabú se evalúan las mismas soluciones iniciales que en la heurística de búsqueda local, y se prueban todos los pares (movimientos tabú, nodos tabú) en el espacio $[1, 10] \times [1, 10]$. La heurística golosa no depende de ningún parámetro de configuración, por lo que no la consideramos en nuestra fase de optimización.
+
+Para cada heurística, la mejor configuración se determina sumando los tamaños de las fronteras de las cliques de máxima frontera halladas para cada instancia del conjunto de grafos de entrenamiento. Elegimos la configuración que maximiza dicha suma.
+
+Las configuraciones óptimas resultaron ser las siguientes:
+
+\begin{description}
+	\item[Heurística de búsqueda local:] Se toma como solución inicial la clique devuelta por la heurística golosa.
+	\item[Heurística tabú:] Se toma como solución inicial la clique devuelta por la heurística golosa y un máximo de 4 movimientos tabú y 1 nodo tabú.
+\end{description}
+
+A continuación se resumen los resultados de haber corrido las tres heurísticas optimizadas con los parámetros anteriores contra las instancias del conjunto de entrenamiento.
 
 
 \subsubsection{Calidad de la solución}
+
 
 \begin{figure}[H]
 	\include{golosa-calidad-entrenamiento}

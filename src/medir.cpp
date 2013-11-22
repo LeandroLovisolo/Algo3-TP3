@@ -102,7 +102,7 @@ cmf local_optimizada(const vector<nodo> &nodos) {
 
 cmf tabu_optimizada(const vector<nodo> &nodos) {
 	cmf solucion_golosa = golosa(nodos);
-	return tabu(nodos, indices_nodos(solucion_golosa), 10, 7);
+	return tabu(nodos, indices_nodos(solucion_golosa), 4, 1);
 }
 
 typedef cmf (*fn_algoritmo)(const vector<nodo> &nodos);

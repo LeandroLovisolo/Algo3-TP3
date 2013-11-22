@@ -4,8 +4,8 @@
 vector<vector<nodo>> generar_grafos() {
 	vector<vector<nodo>> grafos;
 
-	int initial = 2;
-	int max = 11;
+	int initial = 1;
+	int max = 10;
 	int increment = 1;
 
 	// Familia lattice
