@@ -262,7 +262,7 @@ Para la implementación del algoritmo exacto utilizamos la técnica de backtrack
 
 	\State mejor\_cmf : cmf									\Ode{1}
 
-	\For{i = pos To Tamaño(nodos) -1}
+	\For{i = pos To Tamaño(nodos) - 1}
 		\If{agregandoSigueSiendoClique(nodos, clique\_inicial, i)} \Ode{N * log N}
 			\State agregandoIesimo : cmf $\leftarrow$ nueva\_cmf(0, clique\_inicial)	\Ode{1}
 			\State indices\_nodos(agregandoIesimo).Agregar(i)	\Ode{1}
@@ -288,6 +288,7 @@ Para la implementación del algoritmo exacto utilizamos la técnica de backtrack
 \end{pseudo}
 
 \subsection{Complejidad}
+Sea N la cantidad de nodos del grafo, el algoritmo construye el conjunto de partes de nodos basándose en la posibilidad de agregar un elemento dado al conjunto solo si puede ser parte del clique y en caso de que pudiera serlo, en llamadas recurivas, comparando si se consigue una mejor frontera agregándolo o no. Para el cálculo de pertenencia al clique se obtiene una complejidad de O($N * log N$), para calcular el cardinal de la frontera O($N$) y realizar las copias de vectores para mantener la clique cantidata se realizan también en O($N$). La complejidad de estas operaciones termina siendo O($N * log N$). Como el algoritmo tiene 2 ramas para seguir (agregar el elemento al conjunto o no), la complejidad final del algoritmo es O($2^{N * log N}$).
 
 \subsection{Pérformance}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -332,7 +333,7 @@ A continuación presentamos el pseudocódigo:
 	 		   !estaEnLaClique(indices\_nodos(clique), adyacente)}			\Ode{N*log N}
 
 	 			\State aporte : int $\leftarrow$ Tamaño(nodos[adyacente].adyacentes) -
-	 					     2 * Tamaño(indices\_nodos(clique))				\Ode{1}
+	 				\State  2 * Tamaño(indices\_nodos(clique))				\Ode{1}
 
 	 			\If{aporte $>$ aporteCandidato}								\Ode{1}
 	 				\State aporte : aporteCandidato							\Ode{1}
@@ -340,12 +341,15 @@ A continuación presentamos el pseudocódigo:
 	 			\EndIf
 	 		\EndIf
 	 	\EndFor
+	 	\Comment{Complejidad total del ciclo : $N^2 * log N$}
+	 	\State
 	 	\If{aporteCandidato $>$ 0} actual $\leftarrow$ candidato			\Ode{1}
 	 	\Else
 	 		\State break
 	 	\EndIf
 	\EndWhile
-
+	\Comment{Complejidad total del ciclo : $N^3 * log N$}
+	\State
 	\State frontera(clique) $\leftarrow$ cardinalFrontera(nodos, indices\_nodos(clique)) \Ode{N}
 	\State return clique
 \EndProcedure
@@ -354,10 +358,8 @@ A continuación presentamos el pseudocódigo:
 \subsection{Complejidad}
 Sea N cantidad de nodos en el grafo.
 
-En la función estaEnLaClique se tiene un ciclo de a lo sumo N veces (máximo clique), realizando operaciones O(1), por lo que la función tiene una complejidad de O(N).
-
 En el algoritmo goloso, se cicla hasta que cambio sea igual a true. Como el algoritmo solo puede agregar nodos nuevos al clique, se ciclaran a lo sumo N veces.
-Dentro del ciclo del while se tiene un for que recorre todos los adyacentes del nodo que a lo sumo puede tener a todos los nodos del grafo como adyacentes, por lo que se cicla N veces.
+Dentro del ciclo del while se tiene un for que recorre todos los adyacentes del nodo que a lo sumo puede tener a todos los nodos del grafo como adyacentes, por lo que se cicla N veces ya que a lo sumo cada nodo del clique tendrá n-1 adyacentes.
 La complejidad ambos ciclos es N * N * O(N*log N) $\subset$ O($N^3$ * log N).
 Para finalizar, tiene un for que cicla a lo sumo N veces realizando operaciones O(1).
 La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N).
@@ -366,6 +368,7 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 Es posible determinar que el algoritmo goloso se desempeñará de forma ineficaz ante grafos que no incluyan al nodo de mayor grado en el clique de mayor frontera, ya que este siempre formará parte de la solución provista por el algoritmo. Esta solución empeora aun más, como podemos ver en el siguiente gráfico, si el nodo de grado máximo tiene adyacentes de grado 1, haciendo que el algoritmo no pueda explorar el grafo, debido a que al tomarlos como parte del clique solución, no mejorarán la frontera y no se tendran en cuenta.
 
 \begin{figure}[H]
+\centering
 \includegraphics[width=80mm]{ejemploErrorGoloso.png}
 \caption{Las aristas de color rojo forman parte de la frontera encontrada por el algoritmo, mientras que las aristas de color azul forman la frontera máxima}
 \label{overflow}
@@ -461,6 +464,7 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 				\EndIf
 			\EndIf
 		\EndFor
+		\Comment{Complejidad total del ciclo : $N^2 * log N$}
 
 \State
 \State donde \textbf{Operación Intercambiar} es:
@@ -481,7 +485,8 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 						\State nodosAIntercambiar $\leftarrow$ $<$i, j$>$ 													\Ode{1}
 					\EndIf
 				\EndIf
-			\EndFor		
+			\EndFor	
+			\Comment{Complejidad total del ciclo : $N^2 * log N$}
 
 \State
 \State donde \textbf{Operación Eliminar} es:
@@ -497,6 +502,7 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 				\State aporte $\leftarrow$ aporteEliminar 																	\Ode{1}
 			\EndIf
 		\EndFor
+		\Comment{Complejidad total del ciclo : $N^2 * log N$}
 
 
 \end{pseudo}
@@ -611,6 +617,7 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 				\EndIf
 			\EndIf
 		\EndFor
+		\Comment{Complejidad total del ciclo : $N^2 * log N$}
 
 \State
 \State donde \textbf{Operación Intercambiar} es:
@@ -634,7 +641,8 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 						\State nodosAIntercambiar $\leftarrow$ $<$i, j$>$ 											\Ode{1}
 					\EndIf
 				\EndIf
-			\EndFor		
+			\EndFor
+			\Comment{Complejidad total del ciclo : $N^2 * log N$}
 
 \State
 \State donde \textbf{Operación Eliminar} es:
@@ -653,6 +661,7 @@ Es posible notar que entre la solución encontrada (roja) y la solución verdade
 				\State aporte $\leftarrow$ aporteEliminar 															\Ode{1}
 			\EndIf
 		\EndFor
+		\Comment{Complejidad total del ciclo : $N^2 * log N$}
 
 \State
 
