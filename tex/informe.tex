@@ -16,6 +16,7 @@
 \usepackage{enumitem} % Provee macro \setlist
 \usepackage{tabularx}
 \usepackage{multirow}
+\usepackage{hyperref}
 \usepackage[toc, page]{appendix}
 
 
@@ -738,10 +739,12 @@ Las configuraciones óptimas resultaron ser las siguientes:
 	\item[Heurística tabú:] Se toma como solución inicial la clique devuelta por la heurística golosa y un máximo de 4 movimientos tabú y 1 nodo tabú.
 \end{description}
 
-A continuación se resumen los resultados de haber corrido las tres heurísticas optimizadas con los parámetros anteriores contra las instancias del conjunto de entrenamiento.
+A continuación se resumen los resultados de haber corrido las tres heurísticas optimizadas con los parámetros anteriores contra todas las instancias del conjunto de entrenamiento.
 
 
 \subsubsection{Calidad de la solución}
+
+Definimos ``calidad de la solución'' como la diferencia entre el tamaño de la frontera de la solución exacta y el tamaño de la frontera de la solución devuelta por la heurística. Cuanto más chico sea este valor, mejor es la calidad es la solución.
 
 
 \begin{figure}[H]
@@ -774,8 +777,16 @@ A continuación se resumen los resultados de haber corrido las tres heurísticas
 
 \subsection{Grafos de testing}
 
+Llamamos ``grafos de testing'' a un nuevo conjunto de grafos contra los que se corren las heurísticas optimizadas para los grafos de entrenamiento para comparar la calidad de las soluciones obtenidas y el tiempo de ejecución.
+
+Tomamos como grafos de testing los conjuntos de grafos A1 y A2 provistos por la cátedra\footnote{Se pueden descargar desde \url{http://www.dc.uba.ar/materias/aed3/2013/2c/laboratorio/tests_tp3.serieA1.n4_20.zip} y \url{http://www.dc.uba.ar/materias/aed3/2013/2c/laboratorio/tests_tp3.serieA2.n25_125.zip}, respectivamente.}.
+
+Presentamos los resultados de esta experimentación a continuación
+
 
 \subsubsection{Calidad de la solución}
+
+Recordemos que se define como la diferencia entre el tamaño de la frontera de la solución exacta y el tamaño de la frontera de la solución devuelta por la heurística. Cuanto más chico sea este valor, mejor es la calidad es la solución.
 
 \begin{figure}[H]
 	\include{golosa-calidad-testing}
@@ -807,10 +818,10 @@ A continuación se resumen los resultados de haber corrido las tres heurísticas
 
 \subsection{Estadísticas}
 
-Las siguientes estadísticas sintetizan los resultados anteriores. Se tabulan la media ($\mu$) y desvío estándar ($\sigma$) para las siguientes métricas:
+Las siguientes estadísticas sintetizan los resultados anteriores. Se tabulan la media ($\mu$) y desvío estándar ($\sigma$) para las métricas usadas anteriormente, que repetimos a continuación por conveniencia:
 
 \begin{description}
-	\item[Calidad:] diferencia entre el tamaño de la frontera de la solución hallada y la solución exacta.
+	\item[Calidad:] diferencia entre el tamaño de la frontera de la solución exacta y la solución hallada. 
 	\item[Tiempo:] tiempo de ejecución de la heurística medido en milisegundos.
 \end{description}
 
@@ -875,5 +886,11 @@ Las siguientes estadísticas sintetizan los resultados anteriores. Se tabulan la
 		\hline
 	\end{tabularx}
 \end{figure}
+
+
+\section{Conclusiones}
+
+Pendiente.
+
 
 \end{document}
