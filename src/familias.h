@@ -11,7 +11,7 @@ vector<nodo> kn_union_claw_m_complemento(int n, int m);
 vector<nodo> path(int n);
 vector<nodo> lollipop(int n, int m);
 vector<nodo> fan(int n, int m);
-vector<nodo> cicle(int n);
+vector<nodo> cycle(int n);
 vector<nodo> centipede(int n);
 vector<nodo> ninja(int n);
 
