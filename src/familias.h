@@ -11,6 +11,7 @@ vector<nodo> lollipop(int n, int m);
 vector<nodo> fan(int n, int m);
 vector<nodo> cicle(int n);
 vector<nodo> centipede(int n);
+vector<nodo> cagaGolosas(int n);
 
 vector<nodo> k(int n);
 vector<nodo> knm(int n, int m);

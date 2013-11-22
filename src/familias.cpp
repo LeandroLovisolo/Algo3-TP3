@@ -178,3 +178,24 @@ vector<nodo> centipede(int n) {
 	}
 	return Cgraph;
 }
+
+// N tamaño del nodo de mayor grado (estrella)
+vector<nodo> cagaGolosas(int n) {
+	vector<nodo> estrella = claw(n);
+	vector<nodo> clique = k((n+1)/2);
+	int nodosFronteraPorVertice = n-((n+1)/2);
+	for (unsigned i = 0; i < (unsigned) (n+1)/2; ++i) {
+		for (int j = 0; j < nodosFronteraPorVertice; ++j) {
+			nodo nuevo;
+			clique.push_back(nuevo);
+			clique[clique.size() - 1].indice = clique.size() - 1;
+			clique[clique.size() - 1].adyacentes.insert(i);
+			clique[i].adyacentes.insert((indice_nodo) clique.size() - 1);
+		}
+	}
+	vector<nodo> Gunion = graph_union(estrella, clique);
+	// Tomo el clique un nodo de la "frontera" y lo uno con un nodo "frontera" de la estrella
+	Gunion[1].adyacentes.insert((indice_nodo) Gunion.size() - 1);
+	Gunion[Gunion.size() - 1].adyacentes.insert(1);
+	return Gunion;
+}
