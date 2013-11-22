@@ -7,6 +7,10 @@
 
 using namespace std;
 
+// Secuencia de escape para borrar la línea donde está ubicado el cursor actual.
+// Se usa así: cout << borrar_linea;
+#define borrar_linea char(27) << "[2K\r"
+
 // Índice de un nodo en el vector de nodos de un grafo.
 typedef int indice_nodo;
 

@@ -26,7 +26,7 @@ BIN_TEST  = $(BIN_MAIN) -lpthread
 TEST_DEPS = gtest-all.o
 
 # Binarios generados
-BINS      = exacto golosa local tabu tests perf
+BINS      = exacto golosa local tabu tests experimentos perf
 
 ###############################################################################
 # Targets generales                                                           #
@@ -105,6 +105,14 @@ tests: src/tests.cpp gtest-all.o familias.o common.o exacto.o
 
 gtest-all.o:
 	$(OBJ) -I$(GTEST_DIR) -c $(GTEST_DIR)/src/gtest-all.cc
+
+###############################################################################
+# Experimentos                                                                #
+###############################################################################
+
+experimentos: src/experimentos.cpp gtest-all.o familias.o exacto.o golosa.o \
+              local.o tabu.o common.o
+	$(BIN_TEST)
 
 ###############################################################################
 # Performance                                                                 #
