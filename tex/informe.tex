@@ -386,6 +386,8 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 \subsection{Algoritmo}
 Dado un grafo de N vértices y una solución inicial cualquiera, el algoritmo de búsqueda local intentará mejorar la solución inicial moviéndose en las vecindades conformadas por la utilización de una de las operaciones, Agregar, Intercambiar o Eliminar.
 
+A continuación, el pseudocódigo del algoritmo:
+
 \begin{pseudo}
 
 \State \textbf{operacion} es enum $\lbrace$AGREGAR, ELIMINAR, INTERCAMBIAR$\rbrace$
@@ -510,6 +512,8 @@ La complejidad total del algoritmo es: N * O($N^2 * log N$) = O($N^3 * log N$).
 
 \subsection{Algoritmo}
 Dado un grafo de N vértices, una cantidad máxima de nodos tabú posibles M, una cantidad K de movimientos tabú y una solución inicial cualquiera, el algoritmo de búsqueda tabú intentará mejorar la solución inicial moviéndose en las vecindades conformadas por la utilización de una de las operaciones, Agregar, Intercambiar o Eliminar. En caso de no encontrar mejora, entrará en la fase \textit{tabú} donde se moverá por vecindades que no mejoren la frontera del clique a buscar unas K veces sin encontrar resultados mejores antes de devolver la mejor solución.
+
+A continuación, el pseudocódigo del algoritmo:
 
 \begin{pseudo}
 
