@@ -21,7 +21,7 @@ Es un grafo regular con todos sus vértices de grado n-1.
 \label{overflow}
 \end{figure}
 
-\subsection{Grafo Bipartito Completo $K_n$$,_m$}
+\subsection{Grafo Bipartito Completo $K_{n,m}$}
 Un grafo bipartito completo es aquel grafo bipartito en el que todos los vértices de la partición $V_1$ están conectados a todos los vértices de la partición $V_2$ y viceversa.
 
 Donde un grafo bipartito es un grafo G=(V,E) cuyos vértices se pueden separar en dos conjuntos disjuntos $V_1$ y $V_2$, es decir, tal que se cumple:
@@ -33,28 +33,28 @@ $\forall u_1, u_2 \in V_1, \forall v_1, v_2 \in V_2$ no existe ninguna arista e=
 \begin{figure}[H]
 \includegraphics[width=80mm]{K3_2.png}
 \includegraphics[width=80mm]{K3_3.png}
-\caption{La figura de la izquierda corresponde a un grafo bipartito completo $K_3_2$ y la figura derecha a un grafo bipartito completo $K_3_3$.}
+\caption{La figura de la izquierda corresponde a un grafo bipartito completo $K_{3,2}$ y la figura derecha a un grafo bipartito completo $K_{3,3}$.}
 \label{overflow}
 \end{figure}
 
 
-\subsection{Grafo Lattice $L_m_n$}
+\subsection{Grafo Lattice $L_{m,n}$}
 Un grafo Lattice es el producto cartesiano de dos grafos completos $K_m$ y $K_n$.
 
 \begin{figure}[H]
 \includegraphics[width=80mm]{L2_2.png}
 \includegraphics[width=80mm]{L3_3.png}
-\caption{La figura de la izquierda corresponde a un grafo Lattice L$2_2$ y la figura derecha a un grafo Lattice L$3_3$.}
+\caption{La figura de la izquierda corresponde a un grafo Lattice $L_{2,2}$ y la figura derecha a un grafo Lattice $L_{3,2}$.}
 \label{overflow}
 \end{figure}
 
 \subsection{Grafo Claw}
-Un grafo claw es un grafo bipartito completo $K_1_n$. Un único vértice que se une con n vértices y entre los n vértices no existen aristas.
+Un grafo claw es un grafo bipartito completo $K_{1,n}$. Un único vértice que se une con n vértices y entre los n vértices no existen aristas.
 
 \begin{figure}[H]
 \includegraphics[width=80mm]{K1_3.png}
 \includegraphics[width=80mm]{K1_5.png}
-\caption{La figura de la izquierda corresponde a un grafo claw $K1_3$ y la figura derecha a un grafo claw $K1_5$.}
+\caption{La figura de la izquierda corresponde a un grafo claw $K_{1,3}$ y la figura derecha a un grafo claw $K_{1,5}$.}
 \label{overflow}
 \end{figure}
 
@@ -62,21 +62,21 @@ Un grafo claw es un grafo bipartito completo $K_1_n$. Un único vértice que se 
 Un grafo path es un grafo es una sucesión de aristas $e_1e_2$...$e_k$ tal que un extremo de $e_i$ coincide con uno de $e_{i-1}$ y el otro con el de $e_{i+1}$ para i = 2...k-1.
 
 \begin{figure}[H]
-\includegraphics[width=80mm]{P_3.png}
-\includegraphics[width=80mm]{P_5.png}
+\includegraphics[width=80mm]{P3.png}
+\includegraphics[width=80mm]{P5.png}
 \caption{La figura de la izquierda corresponde a un grafo path $P_3$ y la figura derecha a un grafo path $P_5$.}
 \label{overflow}
 \end{figure}
 
-\subsection{Grafo Fan $F_m_n$}
-Un grafo fan $F_m_n$ se define como la unión de $K ^ __ (m)$ y $P_n$.
+\subsection{Grafo Fan $F_{m,n}$}
+Un grafo fan $F_{m,n}$ se define como la unión de $\overline{K}_m$ y $P_n$.
 
-Donde $K ^ __ (m)$ es un grafo con $m$ nodos y 0 aristas y $P_n$ es un grafo path.
+Donde $\overline{K}_m$ es un grafo con $m$ nodos y 0 aristas y $P_n$ es un grafo path.
 
 \begin{figure}[H]
 \includegraphics[width=80mm]{F1_2.png}
 \includegraphics[width=80mm]{F1_3.png}
-\caption{La figura de la izquierda corresponde a un grafo fan $F_1_2$ y la figura derecha a un grafo fan $F_1_3$.}
+\caption{La figura de la izquierda corresponde a un grafo fan $F_{1,2}$ y la figura derecha a un grafo fan $F_{1,3}$.}
 \label{overflow}
 \end{figure}
 
