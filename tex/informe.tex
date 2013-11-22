@@ -296,7 +296,6 @@ Para la implementación del algoritmo exacto utilizamos la técnica de backtrack
 \subsection{Complejidad}
 Sea N la cantidad de nodos del grafo, el algoritmo construye el conjunto de partes de nodos basándose en la posibilidad de agregar un elemento dado al conjunto solo si puede ser parte del clique y en caso de que pudiera serlo, en llamadas recurivas, comparando si se consigue una mejor frontera agregándolo o no. Para el cálculo de pertenencia al clique se obtiene una complejidad de O($N * log N$), para calcular el cardinal de la frontera O($N$) y realizar las copias de vectores para mantener la clique cantidata se realizan también en O($N$). La complejidad de estas operaciones termina siendo O($N * log N$). Como el algoritmo tiene 2 ramas para seguir (agregar el elemento al conjunto o no), la complejidad final del algoritmo es O($2^{N * log N}$).
 
-\subsection{Pérformance}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Heurística contructiva golosa                                             %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -370,9 +369,6 @@ La complejidad ambos ciclos es N * N * O(N*log N) $\subset$ O($N^3$ * log N).
 Para finalizar, tiene un for que cicla a lo sumo N veces realizando operaciones O(1).
 La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N).
 
-\subsection{Análisis de eficacia}
-
-\subsection{Performance}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Heurística de búsqueda local                                              %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -490,9 +486,6 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 \end{pseudo}
 
 \subsection{Complejidad}
-\subsection{Análisis de eficacia}
-
-\subsection{Performance}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Heurística de búsqueda Tabú                                               %%
@@ -533,7 +526,17 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 				\State mejorSolucion $\leftarrow$ mejorSolucion 								\Ode{N}
 				\State faseTabu $\leftarrow$ true 												\Ode{1}
 			\EndIf
+			\State
+			\If{tabu.cantidad\_tabu() == Tamaño(nodos)} return mejorSolucion \EndIf
 
+			\State solucionTabu : bool $\leftarrow$ true
+			\For{i = 0 To Tamaño(indices\_nodos(solucion)) - 1}
+				\If{!tabu.es\_tabu(indices\_nodos(solucion)[i])} solucionTabu $\leftarrow$ false \EndIf \Ode{log M}
+			\EndFor
+			\Comment{Complejidad total del ciclo : $N* log M$}
+			\State
+			\If{op == ELIMINAR \&\& solucionTabu} return mejorSolucion \EndIf
+			\State
 			\Switch{$op$}
 				\Case{AGREGAR}
 				    \State tabu.marcar(nodoAAgregar)										 	\Ode{log M}	
@@ -650,9 +653,6 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 \end{pseudo}
 
 \subsection{Complejidad}
-\subsection{Análisis de eficacia}
-\subsection{Performance}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Experimentación                                                           %%
