@@ -26,9 +26,9 @@ vector<vector<nodo>> generar_grafos() {
 		grafos.push_back(lollipop(m, n));
 	}
 
-	// Familia cagaGolosas
+	// Familia ninja
 	for(int n = initial; n <= max; n += increment) {
-		grafos.push_back(cagaGolosas(n));
+		grafos.push_back(ninja(n));
 	}
 
 	return grafos;
@@ -216,7 +216,7 @@ vector<nodo> centipede(int n) {
 }
 
 // N tamaño del nodo de mayor grado (estrella)
-vector<nodo> cagaGolosas(int n) {
+vector<nodo> ninja(int n) {
 	vector<nodo> estrella = claw(n);
 	vector<nodo> clique = k((n+1)/2);
 	int nodosFronteraPorVertice = n-((n+1)/2);
