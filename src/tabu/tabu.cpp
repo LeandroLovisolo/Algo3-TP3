@@ -1,6 +1,5 @@
 #include <queue>
 #include <limits>
-
 #include "tabu.h"
 
 class nodos_tabu {
@@ -8,12 +7,17 @@ public:
 	nodos_tabu(size_t tam);
 	void marcar(indice_nodo nodo);
 	bool es_tabu(indice_nodo nodo);
+	size_t cantidad_tabu();
 
 private:
 	set<indice_nodo> conjunto;
 	queue<indice_nodo> cola;
 	size_t tam;
 };
+
+size_t nodos_tabu::cantidad_tabu() {
+	return cola.size();
+}
 
 nodos_tabu::nodos_tabu(size_t tam) : tam(tam) { }
 
@@ -42,6 +46,8 @@ cmf tabu(const vector<nodo> &nodos,
 	// Solución correspondiente a la iteración actual del algoritmo.
 	cmf solucion = nueva_cmf(cardinalFrontera(nodos, cliqueInicial),
 			                 cliqueInicial);
+
+	vector<int> copiaClique = cliqueInicial;
 
 	// Mejor solución hallada hasta el momento.
 	cmf mejorSolucion = nueva_cmf(0, vector<indice_nodo>());
@@ -135,7 +141,6 @@ cmf tabu(const vector<nodo> &nodos,
 		// Operación ELIMINAR
 		for(unsigned i = 0; i < indices_nodos(solucion).size(); ++i) {
 			if(tabu.es_tabu(indices_nodos(solucion)[i])) continue;
-
 			// Calculo cuántas aristas agrega a la frontera el eliminar el
 			// i-ésimo nodo de la clique.
 			indice_nodo iEsimo = indices_nodos(solucion)[i];
@@ -158,6 +163,16 @@ cmf tabu(const vector<nodo> &nodos,
 				mejorSolucion = solucion;
 				faseTabu = true;
 			}
+			// Si tengo todo marcado como tabú, no puedo seguir, termino
+			if(tabu.cantidad_tabu() == nodos.size()) return mejorSolucion;
+
+			// Si no es posible agregar, ni intercambiar y tampoco eliminar
+			// por ser los nodos de la solución tabú, termino
+			bool solucionTabu = true;
+			for (unsigned i = 0; i < indices_nodos(solucion).size(); ++i) {
+				if(!tabu.es_tabu(indices_nodos(solucion)[i])) solucionTabu = false;
+			}
+			if(op == ELIMINAR && solucionTabu) return mejorSolucion;
 
 			// Marco como tabú el nodo afectado por la operación que menos
 			// me empeora la solución actual.
