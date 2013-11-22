@@ -352,14 +352,14 @@ A continuación presentamos el pseudocódigo:
 	 			\EndIf
 	 		\EndIf
 	 	\EndFor
-	 	\Comment{Complejidad total del ciclo : $N^2 * log N$}
+	 	\Comment{Complejidad total del ciclo : O($N^2 * log N$)}
 	 	\State
 	 	\If{aporteCandidato $>$ 0} actual $\leftarrow$ candidato			\Ode{1}
 	 	\Else
 	 		\State break
 	 	\EndIf
 	\EndWhile
-	\Comment{Complejidad total del ciclo : $N^3 * log N$}
+	\Comment{Complejidad total del ciclo : O($N^3 * log N$)}
 	\State
 	\State frontera(clique) $\leftarrow$ cardinalFrontera(nodos, indices\_nodos(clique)) \Ode{N}
 	\State return clique
@@ -451,7 +451,7 @@ A continuación, el pseudocódigo del algoritmo:
 				\EndIf
 			\EndIf
 		\EndFor
-		\Comment{Complejidad total del ciclo : $N^2 * log N$}
+		\Comment{Complejidad total del ciclo : O($N^2 * log N$)}
 
 \State
 \State donde \textbf{Operación Intercambiar} es:
@@ -473,7 +473,7 @@ A continuación, el pseudocódigo del algoritmo:
 					\EndIf
 				\EndIf
 			\EndFor	
-			\Comment{Complejidad total del ciclo : $N^2 * log N$}
+			\Comment{Complejidad total del ciclo : O($N^2 * log N$)}
 
 \State
 \State donde \textbf{Operación Eliminar} es:
@@ -489,7 +489,7 @@ A continuación, el pseudocódigo del algoritmo:
 				\State aporte $\leftarrow$ aporteEliminar 																	\Ode{1}
 			\EndIf
 		\EndFor
-		\Comment{Complejidad total del ciclo : $N^2 * log N$}
+		\Comment{Complejidad total del ciclo : O($N^2 * log N$)}
 
 
 \end{pseudo}
@@ -569,7 +569,7 @@ el tamaño de esta. Tiene complejidad O($log M$).
 				\For{i = 0 To Tamaño(indices\_nodos(solucion)) - 1}
 					\If{!tabu.es\_tabu(indices\_nodos(solucion)[i])} solucionTabu $\leftarrow$ false \EndIf \Ode{log M}
 				\EndFor
-				\Comment{Complejidad total del ciclo : $N* log M$}
+				\Comment{Complejidad total del ciclo : O($N* log M$)}
 				\State
 				\If{op == ELIMINAR \&\& solucionTabu} return mejorSolucion \EndIf
 				\State
@@ -639,7 +639,7 @@ el tamaño de esta. Tiene complejidad O($log M$).
 				\EndIf
 			\EndIf
 		\EndFor
-		\Comment{Complejidad total del ciclo : $N^2 * log N$}
+		\Comment{Complejidad total del ciclo : O($N^2 * log N + log M$)}
 
 \State
 \State donde \textbf{Operación Intercambiar} es:
@@ -664,7 +664,7 @@ el tamaño de esta. Tiene complejidad O($log M$).
 					\EndIf
 				\EndIf
 			\EndFor
-			\Comment{Complejidad total del ciclo : $N^2 * log N$}
+			\Comment{Complejidad total del ciclo : O($N^2 * log N + log M$)}
 
 \State
 \State donde \textbf{Operación Eliminar} es:
@@ -683,7 +683,7 @@ el tamaño de esta. Tiene complejidad O($log M$).
 				\State aporte $\leftarrow$ aporteEliminar 															\Ode{1}
 			\EndIf
 		\EndFor
-		\Comment{Complejidad total del ciclo : $N^2 * log N$}
+		\Comment{Complejidad total del ciclo : O($N^2 * log N + log M$)}
 
 \State
 
