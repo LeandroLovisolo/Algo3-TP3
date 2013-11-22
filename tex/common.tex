@@ -4,17 +4,16 @@ Realiza una búsqueda lineal sobre los elementos de la clique, y devuelve $true$
 Complejidad: O(n).
 
 \subsection{sonAdyacentes}
-Dados 2 nodos $u$ y $v$, la funcion devuelve verdadero si los nodos $u$ y $v$ son adyacentes.
+Dados 2 nodos $u$ y $v$, la funcion devuelve verdadero si el nodo $v$ pertenece al conjunto de adyacencias de $u$.
 
 Complejidad: O(log(n)).
 
 \subsection{agregandoSigueSiendoClique}
-Luego de agregar un nodo a la clique, devuelve $true$ si sigue siendo clique, o $false$ en caso contrario.
-
+AgregandoSigueSiendoClique devuelve $true$ si para todos los elementos del clique, el nodo $v$ a agregar pertenece a su conjunto de adyacencia. Devuelve $false$ en caso contrario.
 Complejidad: O(n log(n)).
 
 \subsection{intercambiandoSigueSiendoClique}
-Luego de intercambiar un nodo de la clique con otro nodo que no esté en la clique, devuelve $true$ si sigue siendo clique, o $false$ en caso contrario.
+IntercambiandoSigueSiendoClique devuelve $true$ si para todos los elementos del clique (excepto el que se va a cambiar), el nodo $v$ a intercambiar pertenece a su conjunto de adyacencia. Devuelve $false$ en caso contrario.
 
 Complejidad: O(n log(n)).
 
