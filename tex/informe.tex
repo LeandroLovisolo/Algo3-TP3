@@ -832,7 +832,7 @@ Las siguientes estadísticas sintetizan los resultados anteriores. Se tabulan la
 	\item[Tiempo:] tiempo de ejecución de la heurística medido en milisegundos.
 \end{description}
 
-\include{estadisticas}
+\input{estadisticas}
 
 \begin{figure}[H]
 	\begin{tabularx}{\textwidth}{ |>{\small}X| *9{ >{\small\centering}X|} }
@@ -898,6 +898,92 @@ Las siguientes estadísticas sintetizan los resultados anteriores. Se tabulan la
 \section{Conclusiones}
 
 Pendiente.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Código fuente para la heurística golosa                                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% \begin{appendices}
+
+
+\newpage
+
+\section{Código fuente para la heurística golosa}
+
+
+\subsection{golosa.h}
+
+\verbatiminput{../src/golosa/golosa.h}
+
+
+\subsection{golosa.cpp}
+
+\verbatiminput{../src/golosa/golosa.cpp}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Código fuente para la heurística de búsqueda local                        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newpage
+
+\section{Código fuente para la heurística de búsqueda local}
+
+
+\subsection{local.h}
+
+\verbatiminput{../src/local/local.h}
+
+
+\subsection{local.cpp}
+
+\verbatiminput{../src/local/local.cpp}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Código fuente para la heurística de búsqueda tabú                         %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newpage
+
+\section{Código fuente para la heurística de búsqueda tabú}
+
+
+\subsection{tabu.h}
+
+\verbatiminput{../src/tabu/tabu.h}
+
+
+\subsection{tabu.cpp}
+
+\verbatiminput{../src/tabu/tabu.cpp}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Código en común                                                           %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newpage
+
+\section{Código en común}
+
+
+\subsection{common.h}
+
+\verbatiminput{../src/common/common.h}
+
+
+\subsection{common.cpp}
+
+\verbatiminput{../src/common/common.cpp}
+
+
+% \end{appendices}
 
 
 \end{document}

@@ -52,7 +52,7 @@ int main()
                 }
             }
         #endif
-    	vector<int> clique;
+        vector<int> clique;
         pair<int, vector<int> > res = exacto(nodos);
         cout << res.first << " " << res.second.size() << " ";
         for (unsigned i = 0; i < res.second.size(); ++i) {
