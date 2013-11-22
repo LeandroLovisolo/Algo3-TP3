@@ -47,8 +47,6 @@ cmf tabu(const vector<nodo> &nodos,
 	cmf solucion = nueva_cmf(cardinalFrontera(nodos, cliqueInicial),
 			                 cliqueInicial);
 
-	vector<int> copiaClique = cliqueInicial;
-
 	// Mejor solución hallada hasta el momento.
 	cmf mejorSolucion = nueva_cmf(0, vector<indice_nodo>());
 
@@ -94,10 +92,6 @@ cmf tabu(const vector<nodo> &nodos,
 
 				// Decido si me quedo con la operación.
 				if(aporteAgregar > aporte) {
-					// cout << "Clique obtenido: " << endl;
-					// for (unsigned i = 0; i < indices_nodos(solucion).size(); ++i) {
-					// 	cout << indices_nodos(solucion)[i] << " " << endl;
-					// }
 					op = AGREGAR;
 					nodoAAgregar = i;
 					aporte = aporteAgregar;
@@ -215,28 +209,6 @@ cmf tabu(const vector<nodo> &nodos,
 			indices_nodos(solucion)[nodosAIntercambiar.first] =
 					nodosAIntercambiar.second;
 		}
-
-		// bool esClique = true;
-		// for (unsigned x = 0; x < indices_nodos(solucion).size(); ++x) {
-		// 	for (unsigned j = 0; j < indices_nodos(solucion).size(); ++j) {
-		// 		if(j != x) {
-		// 			if(nodos[solucion.second[x]].adyacentes.find(solucion.second[j]) == nodos[solucion.second[x]].adyacentes.end()) {
-		// 				cout << solucion.second[x] << " no es adyacente con " << solucion.second[j] << endl;
-		// 				esClique = false;
-		// 			}
-		// 		}
-		// 	}
-		// }
-		// if(!esClique) {
-		// 	cout << "El resultado no es clique!" << endl;
-		// 	cout << "La operacion realizada es " << op << endl;
-		// 	cout << "Clique obtenido: " << endl;
-		// 	for (unsigned i = 0; i < indices_nodos(solucion).size(); ++i) {
-		// 		cout << indices_nodos(solucion)[i] << " " << endl;
-		// 	}
-		// 	cout << endl;
-		// 	exit(1);
-		// }
 
 		frontera(solucion) += aporte;
 	}
