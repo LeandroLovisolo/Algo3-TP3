@@ -70,9 +70,8 @@ cmf tabu(const vector<nodo> &nodos,
 	// movimientos tabú restantes y devuelve la mejor solución hallada hasta
 	// el momento.
 	while(true) {
-
 		// Operación hallada (y parámetros) que más aumenta la frontera.
-		operacion op;
+		operacion op = ELIMINAR;
 		indice_nodo nodoAAgregar;
 		indice_nodo nodoAEliminar;
 		pair<indice_nodo, indice_nodo> nodosAIntercambiar;
@@ -86,7 +85,7 @@ cmf tabu(const vector<nodo> &nodos,
 			if(tabu.es_tabu(nodos[i].indice)) continue;
 
 			// ¿Puedo agregar el nodo i-ésimo a la clique?
-			if(!estaEnLaClique(indices_nodos(solucion), i) &&
+			if(!estaEnLaClique(indices_nodos(solucion), nodos[i].indice) &&
 			   agregandoSigueSiendoClique(nodos, indices_nodos(solucion), i)) {
 
 				// Calculo cuántas aristas me aporta a la frontera.
@@ -95,6 +94,10 @@ cmf tabu(const vector<nodo> &nodos,
 
 				// Decido si me quedo con la operación.
 				if(aporteAgregar > aporte) {
+					// cout << "Clique obtenido: " << endl;
+					// for (unsigned i = 0; i < indices_nodos(solucion).size(); ++i) {
+					// 	cout << indices_nodos(solucion)[i] << " " << endl;
+					// }
 					op = AGREGAR;
 					nodoAAgregar = i;
 					aporte = aporteAgregar;
@@ -212,6 +215,28 @@ cmf tabu(const vector<nodo> &nodos,
 			indices_nodos(solucion)[nodosAIntercambiar.first] =
 					nodosAIntercambiar.second;
 		}
+
+		// bool esClique = true;
+		// for (unsigned x = 0; x < indices_nodos(solucion).size(); ++x) {
+		// 	for (unsigned j = 0; j < indices_nodos(solucion).size(); ++j) {
+		// 		if(j != x) {
+		// 			if(nodos[solucion.second[x]].adyacentes.find(solucion.second[j]) == nodos[solucion.second[x]].adyacentes.end()) {
+		// 				cout << solucion.second[x] << " no es adyacente con " << solucion.second[j] << endl;
+		// 				esClique = false;
+		// 			}
+		// 		}
+		// 	}
+		// }
+		// if(!esClique) {
+		// 	cout << "El resultado no es clique!" << endl;
+		// 	cout << "La operacion realizada es " << op << endl;
+		// 	cout << "Clique obtenido: " << endl;
+		// 	for (unsigned i = 0; i < indices_nodos(solucion).size(); ++i) {
+		// 		cout << indices_nodos(solucion)[i] << " " << endl;
+		// 	}
+		// 	cout << endl;
+		// 	exit(1);
+		// }
 
 		frontera(solucion) += aporte;
 	}
