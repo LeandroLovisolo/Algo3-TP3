@@ -80,7 +80,7 @@ void medidor::medir(const vector<nodo> &nodos, const vector<int> &parametros) {
     csv << milisegundos << ", " << frontera(resultado) << endl;
 
 	// Limpio la última linea impresa a la salida estándar.
-	cout << char(27) << "[2K\r";
+	cout << borrar_linea;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

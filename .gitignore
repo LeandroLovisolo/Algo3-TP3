@@ -7,6 +7,7 @@ enunciado.pdf
 /local
 /tabu
 /tests
+/experimentos
 /perf
 
 # Código objeto
@@ -30,3 +31,6 @@ tex/*.log
 
 # Casos de prueba
 testing
+
+# Miscelánea
+octave-core
