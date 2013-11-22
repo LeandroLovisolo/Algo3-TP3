@@ -81,7 +81,7 @@ vector<pair<vector<nodo>, int>> cargar_grafos_testing() {
 
 	for(size_t i = 0; i < filenames.size(); i++) {
 		// Contenido del grafo
-		string filename_in = "data/" + filenames[0];
+		string filename_in = "data/" + filenames[i];
 
 		// Output esperado
 		string filename_out = filename_in;
