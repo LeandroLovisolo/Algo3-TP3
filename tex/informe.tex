@@ -353,14 +353,14 @@ A continuación presentamos el pseudocódigo:
 	 			\EndIf
 	 		\EndIf
 	 	\EndFor
-	 	\Comment{Complejidad total del ciclo : $N^2 * log N$}
+	 	\Comment{Complejidad total del ciclo : O($N^2 * log N$)}
 	 	\State
 	 	\If{aporteCandidato $>$ 0} actual $\leftarrow$ candidato			\Ode{1}
 	 	\Else
 	 		\State break
 	 	\EndIf
 	\EndWhile
-	\Comment{Complejidad total del ciclo : $N^3 * log N$}
+	\Comment{Complejidad total del ciclo : O($N^3 * log N$)}
 	\State
 	\State frontera(clique) $\leftarrow$ cardinalFrontera(nodos, indices\_nodos(clique)) \Ode{N}
 	\State return clique
@@ -410,7 +410,7 @@ A continuación, el pseudocódigo del algoritmo:
 		\State
 		\State \textbf{Operación Intercambiar}														\Ode{N^2 * log N}
 		\State
-		\State \textbf{Operación Eliminar}															\Ode{N^2 * log N}
+		\State \textbf{Operación Eliminar}															\Ode{N}
 		\State
 
 		\If{aporte == 0} break \EndIf																\Ode{1}
@@ -452,7 +452,7 @@ A continuación, el pseudocódigo del algoritmo:
 				\EndIf
 			\EndIf
 		\EndFor
-		\Comment{Complejidad total del ciclo : $N^2 * log N$}
+		\Comment{Complejidad total del ciclo : O($N^2 * log N$)}
 
 \State
 \State donde \textbf{Operación Intercambiar} es:
@@ -474,7 +474,7 @@ A continuación, el pseudocódigo del algoritmo:
 					\EndIf
 				\EndIf
 			\EndFor	
-			\Comment{Complejidad total del ciclo : $N^2 * log N$}
+			\Comment{Complejidad total del ciclo : O($N^2 * log N$)}
 
 \State
 \State donde \textbf{Operación Eliminar} es:
@@ -490,13 +490,13 @@ A continuación, el pseudocódigo del algoritmo:
 				\State aporte $\leftarrow$ aporteEliminar 																	\Ode{1}
 			\EndIf
 		\EndFor
-		\Comment{Complejidad total del ciclo : $N^2 * log N$}
+		\Comment{Complejidad total del ciclo : O($N$)}
 
 
 \end{pseudo}
 
 \subsection{Complejidad}
-Dentro del ciclo principal, las operaciones de elección de movimiento tienen complejidad O($N^2 * log N$) y la aplicación de la operación eliminar tiene una complejidad de O($N$), obteniendose una complejidad de O($N + 3*(N^2 * log N)$) = O($N^2 * log N$).
+Dentro del ciclo principal, las operaciones de elección de movimiento, \textit{Agregar} e \textit{Intercambiar}, tienen complejidad O($N^2 * log N$) y O($N$) para \textit{Eliminar}. La aplicación de la operación \textit{Eliminar} tiene una complejidad de O($N$), obteniendose una complejidad de O($2*N + 2*(N^2 * log N)$) = O($N^2 * log N$).
 El ciclo principal iterara hasta que no haya una mejora. Como las operaciones solo son elegidas si mejoran la frontera del clique que se tiene, un nodo no podrá intercambiarse, agregarse o borrarse más de una vez, ya que si lo hiciera, ya lo hubiera hecho anteriormente, por lo que el ciclo principal se ejecuta a lo sumo N veces.
 
 La complejidad total del algoritmo es: N * O($N^2 * log N$) = O($N^3 * log N$).
@@ -512,7 +512,7 @@ La complejidad total del algoritmo es: N * O($N^2 * log N$) = O($N^3 * log N$).
 \section{Heurística de búsqueda Tabú}
 
 \subsection{Algoritmo}
-Dado un grafo de N vértices, una cantidad máxima de nodos tabú posibles M, una cantidad K de movimientos tabú y una solución inicial cualquiera, el algoritmo de búsqueda tabú intentará mejorar la solución inicial moviéndose en las vecindades conformadas por la utilización de una de las operaciones, Agregar, Intercambiar o Eliminar. En caso de no encontrar mejora, entrará en la fase \textit{tabú} donde se moverá por vecindades que no mejoren la frontera del clique a buscar unas K veces sin encontrar resultados mejores antes de devolver la mejor solución.
+Dado un grafo de N vértices, una cantidad máxima de nodos tabú posibles M, una cantidad K de movimientos tabú y una solución inicial cualquiera, el algoritmo de búsqueda tabú intentará mejorar la solución inicial moviéndose en las vecindades conformadas por la utilización de una de las operaciones, \textit{Agregar}, \textit{Intercambiar} o \textit{Eliminar}. En caso de no encontrar mejora, entrará en la fase \textit{tabú} donde se moverá por vecindades que no mejoren la frontera del clique a buscar unas K veces sin encontrar resultados mejores antes de devolver la mejor solución.
 
 A continuación, el pseudocódigo del algoritmo:
 
@@ -551,11 +551,11 @@ el tamaño de esta. Tiene complejidad O($log M$).
 		\State int aporte $\leftarrow$ -INF															\Ode{1}
 
 		\State
-		\State \textbf{Operación Agregar}															\Ode{N^2 * log N}
+		\State \textbf{Operación Agregar}															\Ode{N^2 * log N + N * log M}
 		\State
-		\State \textbf{Operación Intercambiar}														\Ode{N^2 * log N}
+		\State \textbf{Operación Intercambiar}														\Ode{N^2 * log N + N * log M}
 		\State
-		\State \textbf{Operación Eliminar}															\Ode{N^2 * log N}
+		\State \textbf{Operación Eliminar}															\Ode{log M}
 		\State
 
 		\If{aporte $<$= 0}																			\Ode{1}
@@ -570,7 +570,7 @@ el tamaño de esta. Tiene complejidad O($log M$).
 				\For{i = 0 To Tamaño(indices\_nodos(solucion)) - 1}
 					\If{!tabu.es\_tabu(indices\_nodos(solucion)[i])} solucionTabu $\leftarrow$ false \EndIf \Ode{log M}
 				\EndFor
-				\Comment{Complejidad total del ciclo : $N* log M$}
+				\Comment{Complejidad total del ciclo : O($N* log M$)}
 				\State
 				\If{op == ELIMINAR \&\& solucionTabu} return mejorSolucion \EndIf
 				\State
@@ -591,12 +591,13 @@ el tamaño de esta. Tiene complejidad O($log M$).
 				\State movimientosTabuRestantes--													\Ode{1}
 				\If{movimientosTabuRestantes == 0} return mejorSolucion
 				\EndIf
-			\Else
+		\Else
 				\If{faseTabu \& (aporte + frontera(solucion) $>$ frontera(mejorSolucion))}          \Ode{1}
 					\State faseTabu $\leftarrow$ false 												\Ode{1}
 					\State movimientosTabuRestantes $\leftarrow$ movimientosTabu 					\Ode{1}
 				\EndIf
-			\EndIf
+		\EndIf
+		\Comment{La complejidad dentro del condicional es de: O($N + log M$)}
 
 
 	  	\Switch{$op$}
@@ -640,7 +641,7 @@ el tamaño de esta. Tiene complejidad O($log M$).
 				\EndIf
 			\EndIf
 		\EndFor
-		\Comment{Complejidad total del ciclo : $N^2 * log N$}
+		\Comment{Complejidad total del ciclo : O($N^2 * log N + N * log M$)}
 
 \State
 \State donde \textbf{Operación Intercambiar} es:
@@ -665,7 +666,7 @@ el tamaño de esta. Tiene complejidad O($log M$).
 					\EndIf
 				\EndIf
 			\EndFor
-			\Comment{Complejidad total del ciclo : $N^2 * log N$}
+			\Comment{Complejidad total del ciclo : O($N^2 * log N + N * log M$)}
 
 \State
 \State donde \textbf{Operación Eliminar} es:
@@ -684,13 +685,19 @@ el tamaño de esta. Tiene complejidad O($log M$).
 				\State aporte $\leftarrow$ aporteEliminar 															\Ode{1}
 			\EndIf
 		\EndFor
-		\Comment{Complejidad total del ciclo : $N^2 * log N$}
+		\Comment{Complejidad total del ciclo : O($log M$)}
 
 \State
 
 \end{pseudo}
 
 \subsection{Complejidad}
+Dentro del ciclo principal, las operación de elección de movimiento en la frontera, \textit{Agregar} e \textit{Intercambiar} tienen una complejidad de O($N^2 * log N + N * log M$) y \textit{Eliminar} O($log M$). La operación eliminar tiene una complejidad de O($log M$), obteniendose una complejidad de O($(N^2 * log N) + (N * log M) + 2*(log  M)$) = O($N^2 * log N + N * log M$).
+
+El ciclo principal itera una cierta cantidad de veces hasta no encontrar mejora alguna en la vecindad. Al no encontrar por dónde moverse, entra en modo tabú, donde tiene a lo sumo K movimientos sin mejoras para realizar por nodos que haya o no visitado anteriormente. Tomando como base la cantidad de iteraciones hasta entrar en modo tabú y las K iteraciones posibles del modo tabú, se obtiene una cota superior para las iteraciones de N*K.
+
+La complejidad total del algoritmo es: $N*K*$O($N^2 * log N + N * log M$) = O($K*N^3 * log N + K*N^2 * log M$).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Experimentación                                                           %%
