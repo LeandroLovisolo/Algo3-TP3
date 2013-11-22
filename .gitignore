@@ -23,6 +23,7 @@ tex/*.pdf
 tex/*.aux
 tex/*.toc
 tex/*.log
+tex/*.out
 
 # Eclipse
 .cproject
