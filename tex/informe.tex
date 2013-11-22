@@ -227,18 +227,24 @@ Utilizando el algoritmo de CFM es posible determinar que plantas seran las ideal
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Descripción de familias utilizadas                                        %%
+%% Familias de grafos utilizadas en este trabajo                             %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \newpage
-\section{Descripción de familias utilizadas}
+\section{Familias de grafos utilizadas en este trabajo}
 \input{familias.tex}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Descripción de common                                                     %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \newpage
 \section{Descripción de funciones comunes}
 \input{common.tex}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Algoritmo exacto                                                          %%
@@ -686,13 +692,19 @@ el tamaño de esta. Tiene complejidad O($log M$).
 
 \subsection{Algoritmo exacto}
 
+En el experimento siguiente observamos cómo crece el tiempo de ejecución del algoritmo exacto en función del tamaño de la entrada. Para esto generamos grafos al azar, con cantidad de nodos $n$ entre 1 y 50, y cantidad de aristas $\frac{n^2}{3}$.
 
 \begin{figure}[H]
 	\include{exacto-random}
 \end{figure}
 
+Para grafos más densos el crecimiento es mucho más pronunciado y el experimento puede durar horas, mientras que para grafos más	dispersos lo opuesto ocurre y es necesario una cantidad enorme de nodos para apreciar la naturaleza exponencial del crecimiento. Escogimos la cantidad de aristas $\frac{n^2}{3}$ porque luego de probar otras cantidades en función de la cantidad de nodos, ésta resultó en un buen equilibro entre las características recién mencionadas.
+
 
 \subsection{Grafos de entrenamiento}
+
+Llamamos ``grafos de entrenamiento'' al conjunto de grafos para los que se optimizaron los parámetros de las heurísticas.
+
 
 
 \subsubsection{Calidad de la solución}

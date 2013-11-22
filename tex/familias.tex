@@ -1,11 +1,11 @@
-\subsection{$\overline{K_n \cup claw \: m}$}
+\subsection{Grafo $\overline{K_n \cup Claw_m}$}
 La familia consiste en un grafo $K_n$ y un grafo claw o estrella formado por un nodo y m nodos adyacentes, 
 unidos de forma disjunta, que es luego complementado.
 \begin{figure}[H]
 \includegraphics[width=80mm]{K3UC4.png}
 \includegraphics[width=80mm]{K3UC4Complemento.png}
-\caption{Ejemplificación: La figura de la izquierda corresponde a $K_3$ $\cup$ $claw$ $4$, 
-la figura derecha $\overline{K_3 \cup claw \: 4}$}
+\caption{Ejemplificación: La figura de la izquierda corresponde a $K_3 \cup Claw_4$, 
+la figura derecha $\overline{K_3 \cup Claw_4}$}
 \label{overflow}
 \end{figure}
 
@@ -86,18 +86,18 @@ Donde $\overline{K}_m$ es un grafo con $m$ nodos y 0 aristas y $P_n$ es un grafo
 \label{overflow}
 \end{figure}
 
-\subsection{Grafo cicle $C_n$}
-Un Grafo cicle $C_n$, es un grafo que se asemeja a un polígono de n lados. Consiste en un camino cerrado en el que no se repite ningún vértice a excepción del primero que aparece dos veces como principio y fin del camino. 
+\subsection{Grafo Cycle $C_n$}
+Un grafo cycle $C_n$, es un grafo que se asemeja a un polígono de n lados. Consiste en un camino cerrado en el que no se repite ningún vértice a excepción del primero que aparece dos veces como principio y fin del camino. 
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=50mm]{C_4.png}
 \includegraphics[width=50mm]{C_5.png}
-\caption{La figura de la izquierda corresponde a un grafo cicle $C_4$ y la figura derecha a un grafo cicle $C_5$.}
+\caption{La figura de la izquierda corresponde a un grafo cycle $C_4$ y la figura derecha a un grafo cycle $C_5$.}
 \label{overflow}
 \end{figure}
 
-\subsection{Familia ninja}
+\subsection{Grafo Ninja}
 La familia ninja consiste en un grafo claw o estrella donde el nodo central de este será el nodo de mayor grado del grafo, unido por uno de los nodos de su frontera a uno de los nodos de la frontera de un grafo clique de tamaño determinado donde todos sus nodos tendrán el grado máximo posible (grado máximo - 1). Esta familia presenta malos casos para el algoritmo goloso y el local.
 
 \begin{figure}[H]

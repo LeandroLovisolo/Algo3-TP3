@@ -198,7 +198,7 @@ vector<nodo> fan(int n, int m) {
 }
 
 // Grafo ciclo
-vector<nodo> cicle(int n) {
+vector<nodo> cycle(int n) {
 	vector<nodo> Cgraph = path(n);
 	Cgraph[n -1].adyacentes.insert(0);
 	Cgraph[0].adyacentes.insert(n - 1);

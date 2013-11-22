@@ -10,7 +10,7 @@ mediciones = csvread('mediciones/exacto-random.csv');
 plot(mediciones(:,1), mediciones(:,2));
 
 title(latex_escape('Algoritmo exacto: tiempo de ejecución en función del tamaño de la entrada'));
-xlabel(latex_escape('Tamaño de la entrada'));
+xlabel(latex_escape('$n$'));
 ylabel(latex_escape('Tiempo de ejecución (milisegundos)'));
 
 guardar_como_tex('exacto-random');
