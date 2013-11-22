@@ -503,82 +503,101 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 \State \textbf{indice\_nodo} es int
 \State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto de indice\_nodo adyacentes$>$
 \State \textbf{cmf} es par$<$int, vector de indice\_nodo$>$
+\State \textbf{nodos\_tabu} es  tupla $<$conj\_tabu : conjunto de indice\_nodo, cola : cola de indice\_nodo, tam : unsigned$>$
+\State
+\State Sobre nodos\_tabu operan las siguientes funciones:
+\State \textbf{marcar}(indice\_nodo), agrega el nodo indicado al conjunto tabú y a la cola, eliminando otro elemento si se supera
+el tamaño de esta. Tiene complejidad O($log M$).
+\State \textbf{es\_tabu}(indice\_nodo), devuelve $true$ si el nodo pertenece al conjunto tabú. Su complejidad es O($log M$).
+\State \textbf{cantidad\_tabu}, devuelve la cantidad de nodos marcados como tabú. Tiene complejidad O($1$).
 \State
 \Procedure{tabu}{nodos : vector de nodo, cliqueInicial : vector de int, movimientosTabu : int, cantidadDeNodosTabu : int} $\rightarrow$ cmf
 	
+	\State solucion : cmf $\leftarrow$ nueva\_cmf(cardinalFrontera(nodos, cliqueInicial), cliqueInicial)
 
-	\State operacion op 																		\Ode{1}
-	\State indice\_nodo nodoAAgregar															\Ode{1}
-	\State indice\_nodo nodoAEliminar															\Ode{1}
-	\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar								\Ode{1}
-	\State int aporte $\leftarrow$ -INF															\Ode{1}
+	\State mejorSolucion : cmf $\leftarrow$ nueva\_cmf(0, vector de indice\_nodo vacío) 				\Ode{1}
 
-	\State
-	\State \textbf{Operación Agregar}
-	\State
-	\State \textbf{Operación Intercambiar}
-	\State
-	\State \textbf{Operación Eliminar}
-	\State
+	\State tabu : nodos\_tabu(cantidadDeNodosTabu) 													\Ode{1}
 
-	\If{aporte $<$= 0}																			\Ode{1}
-			\If{!faseTabu}																		\Ode{1}
-				\State mejorSolucion $\leftarrow$ mejorSolucion 								\Ode{N}
-				\State faseTabu $\leftarrow$ true 												\Ode{1}
+	\State faseTabu : bool $\leftarrow$ false 														\Ode{1}
+
+	\State movimientosTabuRestantes : unsigned $\leftarrow$ movimientosTabu 						\Ode{1}
+
+	\While{true}
+
+		\State operacion op 																		\Ode{1}
+		\State indice\_nodo nodoAAgregar															\Ode{1}
+		\State indice\_nodo nodoAEliminar															\Ode{1}
+		\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar								\Ode{1}
+		\State int aporte $\leftarrow$ -INF															\Ode{1}
+
+		\State
+		\State \textbf{Operación Agregar}
+		\State
+		\State \textbf{Operación Intercambiar}
+		\State
+		\State \textbf{Operación Eliminar}
+		\State
+
+		\If{aporte $<$= 0}																			\Ode{1}
+				\If{!faseTabu}																		\Ode{1}
+					\State mejorSolucion $\leftarrow$ mejorSolucion 								\Ode{N}
+					\State faseTabu $\leftarrow$ true 												\Ode{1}
+				\EndIf
+				\State
+				\If{tabu.cantidad\_tabu() == Tamaño(nodos)} return mejorSolucion \EndIf
+
+				\State solucionTabu : bool $\leftarrow$ true
+				\For{i = 0 To Tamaño(indices\_nodos(solucion)) - 1}
+					\If{!tabu.es\_tabu(indices\_nodos(solucion)[i])} solucionTabu $\leftarrow$ false \EndIf \Ode{log M}
+				\EndFor
+				\Comment{Complejidad total del ciclo : $N* log M$}
+				\State
+				\If{op == ELIMINAR \&\& solucionTabu} return mejorSolucion \EndIf
+				\State
+				\Switch{$op$}
+					\Case{AGREGAR}
+					    \State tabu.marcar(nodoAAgregar)										 	\Ode{log M}	
+					    \State break
+					\EndCase
+					\Case{ELIMINAR}
+						\State  tabu.marcar(nodoAEliminar) 											\Ode{log M}
+						\State break
+					\EndCase
+					\Case{INTERCAMBIAR} 
+						\State tabu.marcar(nodosAIntercambiar.first)								\Ode{log M}
+					\EndCase
+				\EndSwitch
+
+				\State movimientosTabuRestantes--													\Ode{1}
+				\If{movimientosTabuRestantes == 0} return mejorSolucion
+				\EndIf
+			\Else
+				\If{faseTabu \& (aporte + frontera(solucion) $>$ frontera(mejorSolucion))}          \Ode{1}
+					\State faseTabu $\leftarrow$ false 												\Ode{1}
+					\State movimientosTabuRestantes $\leftarrow$ movimientosTabu 					\Ode{1}
+				\EndIf
 			\EndIf
-			\State
-			\If{tabu.cantidad\_tabu() == Tamaño(nodos)} return mejorSolucion \EndIf
-
-			\State solucionTabu : bool $\leftarrow$ true
-			\For{i = 0 To Tamaño(indices\_nodos(solucion)) - 1}
-				\If{!tabu.es\_tabu(indices\_nodos(solucion)[i])} solucionTabu $\leftarrow$ false \EndIf \Ode{log M}
-			\EndFor
-			\Comment{Complejidad total del ciclo : $N* log M$}
-			\State
-			\If{op == ELIMINAR \&\& solucionTabu} return mejorSolucion \EndIf
-			\State
-			\Switch{$op$}
-				\Case{AGREGAR}
-				    \State tabu.marcar(nodoAAgregar)										 	\Ode{log M}	
-				    \State break
-				\EndCase
-				\Case{ELIMINAR}
-					\State  tabu.marcar(nodoAEliminar) 											\Ode{log M}
-					\State break
-				\EndCase
-				\Case{INTERCAMBIAR} 
-					\State tabu.marcar(nodosAIntercambiar.first)								\Ode{log M}
-				\EndCase
-			\EndSwitch
-
-			\State movimientosTabuRestantes--													\Ode{1}
-			\If{movimientosTabuRestantes == 0} return mejorSolucion
-			\EndIf
-		\Else
-			\If{faseTabu \& (aporte + frontera(solucion) $>$ frontera(mejorSolucion))}          \Ode{1}
-				\State faseTabu $\leftarrow$ false 												\Ode{1}
-				\State movimientosTabuRestantes $\leftarrow$ movimientosTabu 					\Ode{1}
-			\EndIf
-		\EndIf
 
 
-  	\Switch{$op$}
-	    \Case{AGREGAR}
-		    \State indices\_nodos(solucion).Agregar(nodoAAgregar) 								\Ode{1}
-		    \State break
-	    \EndCase
+	  	\Switch{$op$}
+		    \Case{AGREGAR}
+			    \State indices\_nodos(solucion).Agregar(nodoAAgregar) 								\Ode{1}
+			    \State break
+		    \EndCase
 
-	    \Case{ELIMINAR}
-		    \State indices\_nodos(solucion).Eliminar(indices\_nodos(solucion).begin() + nodoAEliminar) \Ode{N}
-		    \State break
-	    \EndCase
+		    \Case{ELIMINAR}
+			    \State indices\_nodos(solucion).Eliminar(indices\_nodos(solucion).begin() + nodoAEliminar) \Ode{N}
+			    \State break
+		    \EndCase
 
-	   	\Case{INTERCAMBIAR}
-		    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second    \Ode{1}
-	    \EndCase
-	\EndSwitch
-	\State
-	\State frontera(solucion) $\leftarrow$ frontera(solucion) + aporte 								\Ode{1}
+		   	\Case{INTERCAMBIAR}
+			    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second    \Ode{1}
+		    \EndCase
+		\EndSwitch
+		\State
+		\State frontera(solucion) $\leftarrow$ frontera(solucion) + aporte 								\Ode{1}
+	\EndWhile
 	\State return solucion 																			\Ode{1}
 
 \EndProcedure
