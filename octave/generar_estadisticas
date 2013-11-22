@@ -1,0 +1,32 @@
+#!/usr/bin/octave -qf
+
+path_csvs  = 'mediciones/';
+exacto_csv = 'exacto.csv';
+algoritmos = {'golosa', 'local', 'tabu'};
+
+fd = fopen('tex/estadisticas.tex', 'w');
+
+mediciones_exacto = csvread(strcat(path_csvs, exacto_csv));
+
+for i=1:length(algoritmos)
+	mediciones_entrenamiento = csvread(cstrcat(path_csvs, algoritmos{i}, '-entrenamiento.csv'));
+	mediciones_testing       = csvread(cstrcat(path_csvs, algoritmos{i}, '-testing.csv'));
+
+	calidad_entrenamiento = mediciones_exacto(:,2) - mediciones_entrenamiento(:,2);
+	tiempo_entrenamiento  = mediciones_entrenamiento(:,1);
+
+	calidad_testing = mediciones_testing(:,3) - mediciones_testing(:,2);
+	tiempo_testing  = mediciones_testing(:,1);
+
+	fprintf(fd, '\\newcommand{\\%sentrenamientocalidadmu}{%.4f}\n',    algoritmos{i}, mean(calidad_entrenamiento));
+	fprintf(fd, '\\newcommand{\\%sentrenamientocalidadsigma}{%.4f}\n', algoritmos{i}, std(calidad_entrenamiento));
+	fprintf(fd, '\\newcommand{\\%sentrenamientotiempomu}{%.4f}\n',     algoritmos{i}, mean(tiempo_entrenamiento));
+	fprintf(fd, '\\newcommand{\\%sentrenamientotiemposigma}{%.4f}\n',  algoritmos{i}, std(tiempo_entrenamiento));
+	fprintf(fd, '\\newcommand{\\%stestingcalidadmu}{%.4f}\n',          algoritmos{i}, mean(calidad_testing));
+	fprintf(fd, '\\newcommand{\\%stestingcalidadsigma}{%.4f}\n',       algoritmos{i}, std(calidad_testing));
+	fprintf(fd, '\\newcommand{\\%stestingtiempomu}{%.4f}\n',           algoritmos{i}, mean(tiempo_testing));
+	fprintf(fd, '\\newcommand{\\%stestingtiemposigma}{%.4f}\n',        algoritmos{i}, std(tiempo_testing));
+	fprintf(fd, '\n');
+end
+
+fclose(fd);

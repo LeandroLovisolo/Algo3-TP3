@@ -14,6 +14,8 @@
 \usepackage{float}
 \usepackage[noend]{algpseudocode}
 \usepackage{enumitem} % Provee macro \setlist
+\usepackage{tabularx}
+\usepackage{multirow}
 \usepackage[toc, page]{appendix}
 
 
@@ -696,7 +698,6 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 \end{figure}
 
 
-
 \subsection{Grafos de testing}
 
 
@@ -729,5 +730,76 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 	\include{tabu-tiempo-testing}
 \end{figure}
 
+
+\subsection{Estadísticas}
+
+Las siguientes estadísticas sintetizan los resultados anteriores. Se tabulan la media ($\mu$) y desvío estándar ($\sigma$) para las siguientes métricas:
+
+\begin{description}
+	\item[Calidad:] diferencia entre el tamaño de la frontera de la solución hallada y la solución exacta.
+	\item[Tiempo:] tiempo de ejecución de la heurística medido en milisegundos.
+\end{description}
+
+\include{estadisticas}
+
+\begin{figure}[H]
+	\begin{tabularx}{\textwidth}{ |>{\small}X| *9{ >{\small\centering}X|} }
+		\hline
+		\multirow{3}{*}{Heurística} &
+		\multicolumn{4}{ l| }{Grafos de entrenamiento} &
+		\multicolumn{4}{ l| }{Grafos de testing}
+		\tabularnewline
+		
+		\cline{2-9}
+		&
+		\multicolumn{2}{ l| }{Calidad} &
+		\multicolumn{2}{ l| }{Tiempo} &
+		\multicolumn{2}{ l| }{Calidad} &
+		\multicolumn{2}{ l| }{Tiempo}
+		\tabularnewline
+
+		\cline{2-9}
+		& $\mu$ & $\sigma$ & $\mu$ & $\sigma$ & $\mu$ & $\sigma$ & $\mu$ & $\sigma$
+		\tabularnewline
+
+		\hline
+		Golosa &
+		\golosaentrenamientocalidadmu &
+		\golosaentrenamientocalidadsigma &
+		\golosaentrenamientotiempomu &
+		\golosaentrenamientotiemposigma &
+		\golosatestingcalidadmu &
+		\golosatestingcalidadsigma &
+		\golosatestingtiempomu &
+		\golosatestingtiemposigma
+		\tabularnewline
+
+		\hline
+		Local &
+		\localentrenamientocalidadmu &
+		\localentrenamientocalidadsigma &
+		\localentrenamientotiempomu &
+		\localentrenamientotiemposigma &
+		\localtestingcalidadmu &
+		\localtestingcalidadsigma &
+		\localtestingtiempomu &
+		\localtestingtiemposigma
+		\tabularnewline
+
+		\hline
+		Tabú &
+		\tabuentrenamientocalidadmu &
+		\tabuentrenamientocalidadsigma &
+		\tabuentrenamientotiempomu &
+		\tabuentrenamientotiemposigma &
+		\tabutestingcalidadmu &
+		\tabutestingcalidadsigma &
+		\tabutestingtiempomu &
+		\tabutestingtiemposigma
+		\tabularnewline
+
+		\hline
+	\end{tabularx}
+\end{figure}
 
 \end{document}
