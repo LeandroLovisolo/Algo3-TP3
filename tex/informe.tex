@@ -384,6 +384,7 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 
 \section{Heurística de búsqueda local}
 \subsection{Algoritmo}
+Dado un grafo de N vértices y una solución inicial cualquiera, el algoritmo de búsqueda local intentará mejorar la solución inicial moviéndose en las vecindades conformadas por la utilización de una de las operaciones, Agregar, Intercambiar o Eliminar.
 
 \begin{pseudo}
 
@@ -492,6 +493,11 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 \end{pseudo}
 
 \subsection{Complejidad}
+Dentro del ciclo principal, las operaciones de elección de movimiento tienen complejidad O($N^2 * log N$) y la aplicación de la operación eliminar tiene una complejidad de O($N$), obteniendose una complejidad de O($N + 3*(N^2 * log N)$) = O($N^2 * log N$).
+El ciclo principal iterara hasta que no haya una mejora. Como las operaciones solo son elegidas si mejoran la frontera del clique que se tiene, un nodo no podrá intercambiarse, agregarse o borrarse más de una vez, ya que si lo hiciera, ya lo hubiera hecho anteriormente, por lo que el ciclo principal se ejecuta a lo sumo N veces.
+
+La complejidad total del algoritmo es: N * O($N^2 * log N$) = O($N^3 * log N$).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Heurística de búsqueda Tabú                                               %%
@@ -501,7 +507,9 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 \newpage
 
 \section{Heurística de búsqueda Tabú}
+
 \subsection{Algoritmo}
+Dado un grafo de N vértices, una cantidad máxima de nodos tabú posibles M, una cantidad K de movimientos tabú y una solución inicial cualquiera, el algoritmo de búsqueda tabú intentará mejorar la solución inicial moviéndose en las vecindades conformadas por la utilización de una de las operaciones, Agregar, Intercambiar o Eliminar. En caso de no encontrar mejora, entrará en la fase \textit{tabú} donde se moverá por vecindades que no mejoren la frontera del clique a buscar unas K veces sin encontrar resultados mejores antes de devolver la mejor solución.
 
 \begin{pseudo}
 
