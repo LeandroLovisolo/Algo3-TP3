@@ -388,42 +388,42 @@ La complejidad final del algoritmo es O(N) + O($N^3$ * log N) = O($N^3$ * log N)
 
 \State
 \Procedure{local}{nodos : vector de nodo, cliqueInicial : vector de int} $\rightarrow$ cmf
-	
-	\State op : operaciones 																	\Ode{1}
-	\State nodoAAgregar	: indice\_nodo 															\Ode{1}
-	\State nodoAEliminar : indice\_nodo															\Ode{1}
-	\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar								\Ode{1}
-	\State aporte : int  $\leftarrow$ 0															\Ode{1}
+	\While{true}
+		\State op : operaciones 																	\Ode{1}
+		\State nodoAAgregar	: indice\_nodo 															\Ode{1}
+		\State nodoAEliminar : indice\_nodo															\Ode{1}
+		\State par$<$indice\_nodo, indice\_nodo$>$ nodosAIntercambiar								\Ode{1}
+		\State aporte : int  $\leftarrow$ 0															\Ode{1}
 
-	\State
-	\State \textbf{Operación Agregar}
-	\State
-	\State \textbf{Operación Intercambiar}
-	\State
-	\State \textbf{Operación Eliminar}
-	\State
+		\State
+		\State \textbf{Operación Agregar}															\Ode{N^2 * log N}
+		\State
+		\State \textbf{Operación Intercambiar}														\Ode{N^2 * log N}
+		\State
+		\State \textbf{Operación Eliminar}															\Ode{N^2 * log N}
+		\State
 
-	\If{aporte == 0} break \EndIf																\Ode{1}
+		\If{aporte == 0} break \EndIf																\Ode{1}
 
-  	\Switch{$op$}
-	    \Case{AGREGAR}
-		    \State indices\_nodos(solucion).Agregar(nodoAAgregar)								\Ode{1}
-		    \State break
-	    \EndCase
+	  	\Switch{$op$}
+		    \Case{AGREGAR}
+			    \State indices\_nodos(solucion).Agregar(nodoAAgregar)								\Ode{1}
+			    \State break
+		    \EndCase
 
-	    \Case{ELIMINAR}
-		    \State indices\_nodos(solucion).Eliminar(indices\_nodos(solucion).begin() + nodoAEliminar)	\Ode{N}
-		    \State break
-	    \EndCase
+		    \Case{ELIMINAR}
+			    \State indices\_nodos(solucion).Eliminar(indices\_nodos(solucion).begin() + nodoAEliminar)	\Ode{N}
+			    \State break
+		    \EndCase
 
-	   	\Case{INTERCAMBIAR}
-		    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second	\Ode{1}
-	    \EndCase
-	\EndSwitch
-	\State
-	\State frontera(solucion) $\leftarrow$ frontera(solucion) + aporte 							\Ode{1}
-	\State return solucion
-
+		   	\Case{INTERCAMBIAR}
+			    \State indices\_nodos(solucion)[nodosAIntercambiar.first] = nodosAIntercambiar.second	\Ode{1}
+		    \EndCase
+		\EndSwitch
+		\State
+		\State frontera(solucion) $\leftarrow$ frontera(solucion) + aporte 							\Ode{1}
+		\State return solucion
+	\EndWhile
 \EndProcedure
 \State
 \State donde \textbf{Operación Agregar} es:
@@ -532,11 +532,11 @@ el tamaño de esta. Tiene complejidad O($log M$).
 		\State int aporte $\leftarrow$ -INF															\Ode{1}
 
 		\State
-		\State \textbf{Operación Agregar}
+		\State \textbf{Operación Agregar}															\Ode{N^2 * log N}
 		\State
-		\State \textbf{Operación Intercambiar}
+		\State \textbf{Operación Intercambiar}														\Ode{N^2 * log N}
 		\State
-		\State \textbf{Operación Eliminar}
+		\State \textbf{Operación Eliminar}															\Ode{N^2 * log N}
 		\State
 
 		\If{aporte $<$= 0}																			\Ode{1}
