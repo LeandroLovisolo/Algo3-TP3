@@ -179,7 +179,49 @@ int main() {
 	    csv << milisegundos << ", " << frontera(resultado) << endl;
 	}
 
-	csv.close();	
+	csv.close();
+
+	////////////////////////////////////////////////
+	// Algoritmo exacto: grafos generados al azar //
+	////////////////////////////////////////////////
+
+	csv.open("mediciones/exacto-random.csv");
+
+	for(int nodos = 1; nodos <= 50; nodos ++) {
+		int aristas = nodos * nodos / 3;
+
+		cout << "exacto: grafo random de "
+			 << nodos << " nodos y "
+			 << aristas << " aristas" << endl;
+
+		double promedio = 0;
+		int n;
+		for(n = 0; n < 10; n++) {
+			vector<nodo> grafo(nodos);
+			for(int i = 0; i < nodos; i++) grafo[i].indice = i;
+
+			int aristas_random = 0;
+			while(aristas_random < aristas) {
+				int u = rand() % nodos, v = rand() % nodos;
+				if(u != v && !sonAdyacentes(grafo[u], grafo[v])) {
+					grafo[u].adyacentes.insert(v);
+					grafo[v].adyacentes.insert(u);
+					aristas_random++;
+				}
+			}
+
+			clock_t tiempo = clock();
+			cmf resultado = exacto(grafo);
+			tiempo = clock() - tiempo;
+			double milisegundos = tiempo * 1000.0 / CLOCKS_PER_SEC;
+			promedio += milisegundos;
+		}
+		promedio /= n;
+
+		csv << nodos << ", " << promedio << endl;
+	}
+
+	csv.close();
 
 	return 0;
 }
