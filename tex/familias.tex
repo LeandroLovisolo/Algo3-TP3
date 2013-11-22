@@ -96,3 +96,29 @@ Un Grafo cicle $C_n$, es un grafo que se asemeja a un polígono de n lados. Cons
 \caption{La figura de la izquierda corresponde a un grafo cicle $C_4$ y la figura derecha a un grafo cicle $C_5$.}
 \label{overflow}
 \end{figure}
+
+\subsection{Familia ninja}
+La familia ninja consiste en un grafo claw o estrella donde el nodo central de este será el nodo de mayor grado del grafo, unido por uno de los nodos de su frontera a uno de los nodos de la frontera de un grafo clique de tamaño determinado donde todos sus nodos tendrán el grado máximo posible (grado máximo - 1). Esta familia presenta malos casos para el algoritmo goloso y el local.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=80mm]{ejemploErrorGoloso.png}
+\caption{Ejemplificación: Las aristas de color rojo forman parte de la frontera encontrada por los algoritmos, mientras que las aristas de color azul forman la frontera máxima}
+\label{overflow}
+\end{figure}
+
+Analizando este grafo, puede determinarse que es posible manipular o generar diferentes casos de esta familia para conseguir una respuesta tan mala como se desee.
+
+Incrementando la cantidad de adyacentes del nodo de mayor grado (nodo de color rojo), podemos hacer que el verdadero clique (parte azul) crezca, pudiendo incrementar la diferencia entre la frontera encontrada por el algoritmo y la frontera máxima del grafo provista por una clique.
+
+Tanto el algoritmo goloso, como el algoritmo local (comenzando desde el goloso o desde el nodo de mayor grado) quedarán atascados en el nodo de mayor grado, ya que ningún movimiento que pudieran realizar mejorará la frontera.
+
+Tomando \textbf{d} = nodo de grado máximo y \textbf{c} = tamaño de clique elegido para sección azul, obtenemos que es posible calcular la frontera máxima según el tamaño del clique elejido y del grado máximo que puede encontrarse en el grafo.
+
+La ecuación de la frontera es la siguiente: $f(c) = (d - (c - 1)) * c$.
+
+Buscamos el \textbf{c} máximo para los valores de d. $f'(c) = d - 2 * c + 1$ = 0 $\Leftrightarrow$ $c = (d + 1)/2$.
+
+Es posible corroborar que $c = (d + 1)/2$ es un máximo viendo: $f''((d + 1)/2) = -2 < 0$.
+
+Conociendo \textbf{c}, solo basta con hacer crecer el grado del nodo de mayor grado y conectarlo con un clique de tamaño $(d + 1)/2$ para obtener una diferencia de exactitud en tamaño de frontera de $(d - (c - 1)) * c$ - $d$, que se irá incrementado a medida que d crezca.
