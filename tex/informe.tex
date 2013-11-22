@@ -496,7 +496,7 @@ A continuación, el pseudocódigo del algoritmo:
 \end{pseudo}
 
 \subsection{Complejidad}
-Dentro del ciclo principal, las operaciones de elección de movimiento, \texit{Agregar} e \texit{Intercambiar}, tienen complejidad O($N^2 * log N$) y O($N$) para \texit{Eliminar}. La aplicación de la operación \textit{Eliminar} tiene una complejidad de O($N$), obteniendose una complejidad de O($2*N + 2*(N^2 * log N)$) = O($N^2 * log N$).
+Dentro del ciclo principal, las operaciones de elección de movimiento, \textit{Agregar} e \textit{Intercambiar}, tienen complejidad O($N^2 * log N$) y O($N$) para \textit{Eliminar}. La aplicación de la operación \textit{Eliminar} tiene una complejidad de O($N$), obteniendose una complejidad de O($2*N + 2*(N^2 * log N)$) = O($N^2 * log N$).
 El ciclo principal iterara hasta que no haya una mejora. Como las operaciones solo son elegidas si mejoran la frontera del clique que se tiene, un nodo no podrá intercambiarse, agregarse o borrarse más de una vez, ya que si lo hiciera, ya lo hubiera hecho anteriormente, por lo que el ciclo principal se ejecuta a lo sumo N veces.
 
 La complejidad total del algoritmo es: N * O($N^2 * log N$) = O($N^3 * log N$).
