@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+vector<vector<nodo>> generar_grafos();
+
 vector<nodo> lattice(int m, int n);
 vector<nodo> claw(int n);
 vector<nodo> kn_union_claw_m_complemento(int n, int m);

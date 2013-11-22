@@ -1,0 +1,101 @@
+#!/usr/bin/octave -qf
+
+source('octave/histograma.m');
+source('octave/histograma_calidad.m');
+source('octave/histograma_tiempo.m');
+source('octave/guardar_como_tex.m');
+source('octave/latex_escape.m');
+source('octave/remove_tildes.m');
+
+path_csvs  = 'mediciones/';
+exacto_csv = 'exacto.csv';
+algoritmos = {'Golosa', 'Local', 'Tabú'};
+
+mediciones_exacto = csvread(strcat(path_csvs, exacto_csv));
+
+for i = 1:length(algoritmos)
+	printf('Generando histogramas para algoritmo %s\n', algoritmos{i});
+
+	archivo_csv_base          = cstrcat(path_csvs, remove_tildes(lower(algoritmos{i})));
+	archivo_csv_entrenamiento = cstrcat(archivo_csv_base, '-entrenamiento.csv');
+	archivo_csv_testing       = cstrcat(archivo_csv_base, '-testing.csv');
+
+	archivo_tex_base                  = remove_tildes(lower(algoritmos{i}));
+	archivo_tex_calidad_entrenamiento = cstrcat(archivo_tex_base, '-calidad-entrenamiento');
+	archivo_tex_tiempo_entrenamiento  = cstrcat(archivo_tex_base, '-tiempo-entrenamiento');
+	archivo_tex_calidad_testing       = cstrcat(archivo_tex_base, '-calidad-testing');
+	archivo_tex_tiempo_testing        = cstrcat(archivo_tex_base, '-tiempo-testing');
+
+	mediciones_entrenamiento = csvread(archivo_csv_entrenamiento);
+	mediciones_testing       = csvread(archivo_csv_testing);
+
+	histograma_calidad(algoritmos{i}, mediciones_exacto(:,2) - mediciones_entrenamiento(:,2));
+	guardar_como_tex(archivo_tex_calidad_entrenamiento);
+
+	histograma_tiempo(algoritmos{i}, mediciones_entrenamiento(:,1));
+	guardar_como_tex(archivo_tex_tiempo_entrenamiento);
+
+	histograma_calidad(algoritmos{i}, mediciones_testing(:,3) - mediciones_testing(:,2));
+	guardar_como_tex(archivo_tex_calidad_testing);
+
+	histograma_tiempo(algoritmos{i}, mediciones_testing(:,1));
+	guardar_como_tex(archivo_tex_tiempo_testing);
+end
+
+
+
+
+
+
+% familias = {'Grafo completo', 'Lattice I'};
+% familias_slug = {'grafo-completo', 'lattice-i'};
+% algoritmos = {'Goloso', 'Local', 'Tab\''u'};
+% algoritmos_slug = {'goloso', 'local', 'tabú'};
+% metricas = {'tiempo', 'frontera'};
+
+% for f = 1:length(familias_slug)
+% 	for m = 1:length(metricas)
+% 		printf('Graficando familia "%s", métrica "%s"\n', familias_slug{f}, metricas{m});
+
+% 		datos = {};
+
+% 		for a = 1:length(algoritmos_slug)
+% 			archivo = strcat('mediciones/',
+% 				              algoritmos_slug{a}, '-',
+% 				              familias_slug{f}, '.csv');
+% 			datos{columns(datos) + 1} = leer_datos(archivo, metricas{m});
+% 		end
+
+% 		if(strcmp(metricas{m}, 'tiempo'))
+% 			metrica_titulo = 'Tiempo de ejecuci\''on';
+% 		else
+% 			metrica_titulo = 'Tamaño de las fronteras de las CMF halladas';
+% 		end
+
+% 		titulo = cstrcat(familias{f}, ': ', metrica_titulo);
+% 		graficar(algoritmos, datos, titulo, struct('eje_y', metricas{m}));
+
+% 		archivo_tex = strcat(familias_slug{f}, '-', metricas{m});
+% 		cd('tex');
+% 		print(archivo_tex, '-S950,450', '-dtex');
+% 		cd('..');
+
+% 		close();
+% 	end 
+% end
+
+
+
+
+% datos = {};
+
+% datos{columns(datos) + 1} = leer_datos('mediciones/goloso-lattice-i.csv', metrica);
+% datos{columns(datos) + 1} = leer_datos('mediciones/local-lattice-i.csv', metrica);
+% datos{columns(datos) + 1} = leer_datos('mediciones/tabú-lattice-i.csv', metrica);
+
+% graficar(algoritmos, datos, struct('eje_y', metrica));
+
+% pause();
+
+% cd('tex');
+% print(grafico, '-S950,450', '-dtex');

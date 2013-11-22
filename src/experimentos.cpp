@@ -3,8 +3,9 @@
 
 #include "gtest/gtest.h"
 
-#include "local/local.h"
+#include "exacto/exacto.h"
 #include "golosa/golosa.h"
+#include "local/local.h"
 #include "tabu/tabu.h"
 #include "familias.h"
 
@@ -16,37 +17,6 @@ std::ostream& operator<< (std::ostream& os, const clique_inicial& ci) {
     if(ci == NODO_DE_MAYOR_GRADO) os <<  "Nodo de mayor grado";
     else os << "Solución de la heurística golosa";
     return os;
-}
-
-vector<vector<nodo>> generar_grafos() {
-	vector<vector<nodo>> grafos;
-
-	int max = 20;
-
-	// Familia lattice
-	for(int m = 5; m <= max; m += 5)
-	for(int n = 5; n <= max; n += 5) {
-		grafos.push_back(lattice(m, n));
-	}
-
-	// Familia (K_n U Claw_m)^c
-	for(int m = 5; m <= max; m += 5)
-	for(int n = 5; n <= max; n += 5) {
-		grafos.push_back(kn_union_claw_m_complemento(m, n));
-	}
-
-	// Familia lollipop
-	for(int m = 5; m <= max; m += 5)
-	for(int n = 5; n <= max; n += 5) {
-		grafos.push_back(lollipop(m, n));
-	}
-
-	// Familia cagaGolosas
-	for(int n = 1; n <= max; n++) {
-		grafos.push_back(cagaGolosas(n));
-	}
-
-	return grafos;
 }
 
 indice_nodo nodo_de_mayor_grado(const vector<nodo> &nodos) {
@@ -134,6 +104,16 @@ TEST(Parametros, Tabu) {
 	     << "  movimientos_tabu = " << get<1>(mejores_parametros) << endl
 		 << "  nodos_tabu = "       << get<2>(mejores_parametros) << endl
 		 << "Suma total de fronteras: " << suma_frontera_mejores_parametros << endl << endl;
+}
+
+TEST(Parametros, Exacto) {
+	vector<vector<nodo>> grafos = generar_grafos();
+
+	for(size_t i = 0; i < grafos.size(); i++) {
+		cout << "Grafo " << i << "/" << grafos.size() << "... " << flush;
+		cmf solucion = exacto(grafos[i]);
+		cout << "frontera = " << frontera(solucion) << endl;
+	}
 }
 
 GTEST_API_ int main(int argc, char **argv) {

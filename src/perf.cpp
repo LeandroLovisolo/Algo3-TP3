@@ -1,168 +1,185 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <algorithm>
+#include <dirent.h>
 
-#include "exacto/exacto.h"
-#include "local/local.h"
-#include "golosa/golosa.h"
-#include "tabu/tabu.h"
 #include "familias.h"
+#include "exacto/exacto.h"
+#include "golosa/golosa.h"
+#include "local/local.h"
+#include "tabu/tabu.h"
 
-///////////////////////////////////////////////////////////////////////////////
-// Estructuras y código auxiliar para realizar mediciones.                   //
-///////////////////////////////////////////////////////////////////////////////
+vector<string> ls(string path) {
+	vector<string> filenames;
 
-class medidor;
-
-struct algoritmo {
-	string nombre;
-	cmf (*fn)(const vector<nodo> &nodo);
-
-	algoritmo(string nombre, cmf (*fn)(const vector<nodo> &nodo))
-			: nombre(nombre), fn(fn) {}
-};
-
-struct familia {
-	string nombre;
-	void (*fn)(medidor &m);
-
-	familia(string nombre, void (*fn)(medidor &m))
-			: nombre(nombre), fn(fn) {}
-};
-
-class medidor {
-public:
-	medidor(algoritmo algo, familia fam);
-	~medidor();
-	void medir(const vector<nodo> &nodos, const vector<int> &parametros);
-
-private:
-	algoritmo algo;
-	familia fam;
-	ofstream csv;
-};
-
-medidor::medidor(algoritmo algo, familia fam)
-		: algo(algo), fam(fam) {
-
-	// Genero nombre de archivo base.
-	string filename = "mediciones/" + algo.nombre + "-" + fam.nombre + ".csv";
-
-	// Lo paso a minúsculas.
-	transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
-
-	// Reemplazo espacios por guiones.
-	for(size_t i = 0; i < filename.length(); i++)
-		if(filename[i] == ' ') filename[i] = '-';
-
-	csv.open(filename);
-}
-
-medidor::~medidor() {
-	csv.close();
-}
-
-void medidor::medir(const vector<nodo> &nodos, const vector<int> &parametros) {
-	// Imprimo la tupla de parámetros actual.
-	for(size_t i = 0; i < parametros.size(); i++) cout << parametros[i] << " ";
-	cout << flush;
-
-	// Ejecuto el algoritmo y mido el tiempo que demora.
-    clock_t tiempo = clock();
-	cmf resultado = algo.fn(nodos);
-	tiempo = clock() - tiempo;
-    double milisegundos = tiempo * 1000.0 / CLOCKS_PER_SEC;
-
-    // Escribo la tupla de parámetros.
-    for(size_t i = 0; i < parametros.size(); i++) csv << parametros[i] << ", ";
-
-    // Escribo el tiempo demorado y el tamaño de la frontera de la CMF devuelta.
-    csv << milisegundos << ", " << frontera(resultado) << endl;
-
-	// Limpio la última linea impresa a la salida estándar.
-	cout << borrar_linea;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Algoritmos y familias de grafos.                                          //
-///////////////////////////////////////////////////////////////////////////////
-
-cmf local_golosa(const vector<nodo> &nodos) {
-	cmf clique_inicial = golosa(nodos);
-	return local(nodos, indices_nodos(clique_inicial));
-}
-
-cmf tabu_golosa(const vector<nodo> &nodos) {
-	cmf clique_inicial = golosa(nodos);
-	return tabu(nodos, indices_nodos(clique_inicial), 10, 10);
-}
-
-void familia_k(medidor &m) {
-	for(int n = 10; n < 100; n++) {
-		vector<nodo> nodos = k(n);
-		m.medir(nodos, vector<int>({n}));
+	DIR *dir = opendir(path.c_str());
+	struct dirent *ent;
+	while((ent = readdir(dir)) != NULL) {
+		filenames.push_back(ent->d_name);
 	}
+	closedir(dir);
+
+	return filenames;
 }
 
-void familia_lattice_i(medidor &medidor) {
-	int m = 5;
-	for(int n = 10; n < 100; n++) {
-		vector<nodo> nodos = lattice(m, n);
-		medidor.medir(nodos, vector<int>{n});
+bool ends_with(const string& s, const string& suffix) {
+    return s.rfind(suffix) == (s.size()-suffix.size());
+}
+
+vector<nodo> cargar_grafo(string filename) {
+	ifstream in(filename);
+
+	// Leo la cantidad de vertices.
+	unsigned n;
+	in >> n;
+
+	// Leo la cantidad de aristas.
+	unsigned m;
+	in >> m;
+
+	// Ignoro el resto de la línea.
+	string s;
+	getline(in, s);
+
+	// Armo el grafo.
+	vector<nodo> nodos;
+	nodos.resize(n);
+	for(unsigned i = 0; i < m; ++i) {
+		unsigned v, w;
+		in >> v; // Leo nodo v.
+		in >> w; // Leo nodo w.
+		nodos[v-1].adyacentes.insert(w-1);
+		nodos[w-1].adyacentes.insert(v-1);
+
+		// Ignoro el resto de la línea.
+		getline(in, s);
 	}
+
+	// Cargo los índices.
+	for (unsigned i = 0; i < n; ++i) nodos[i].indice = i;
+
+	return nodos;
 }
 
-void familia_lattice_ii(medidor &medidor) {
-	int m = 10;
-	for(int n = 10; n < 100; n++) {
-		vector<nodo> nodos = lattice(m, n);
-		medidor.medir(nodos, vector<int>{n});
+int cargar_tam_solucion(string filename) {
+	ifstream in(filename);
+	int tam;
+	in >> tam;
+	return tam;
+
+}
+
+vector<pair<vector<nodo>, int>> cargar_grafos_testing() {
+	vector<pair<vector<nodo>, int>> pares_grafo_tam_solucion;
+
+	// Leo los archivos .in
+	vector<string> filenames = ls("data");
+	vector<string>::iterator end = remove_if(filenames.begin(), filenames.end(),
+			[] (string filename) { return filename == ".." || !ends_with(filename, ".in"); });
+	filenames = vector<string>(filenames.begin(), end);
+
+	for(size_t i = 0; i < filenames.size(); i++) {
+		// Contenido del grafo
+		string filename_in = "data/" + filenames[0];
+
+		// Output esperado
+		string filename_out = filename_in;
+		filename_out.replace(filename_out.end() - 2, filename_out.end(), "out");
+
+		pares_grafo_tam_solucion.push_back(
+				make_pair(cargar_grafo(filename_in),
+						  cargar_tam_solucion(filename_out)));
 	}
+
+	return pares_grafo_tam_solucion;
 }
 
-void familia_lattice_iii(medidor &medidor) {
-	int m = 15;
-	for(int n = 10; n < 100; n++) {
-		vector<nodo> nodos = lattice(m, n);
-		medidor.medir(nodos, vector<int>{n});
-	}
+cmf local_optimizada(const vector<nodo> &nodos) {
+	cmf solucion_golosa = golosa(nodos);
+	return local(nodos, indices_nodos(solucion_golosa));
 }
 
-void familia_lattice_iv(medidor &medidor) {
-	int m = 20;
-	for(int n = 10; n < 100; n++) {
-		vector<nodo> nodos = lattice(m, n);
-		medidor.medir(nodos, vector<int>{n});
-	}
+cmf tabu_optimizada(const vector<nodo> &nodos) {
+	cmf solucion_golosa = golosa(nodos);
+	return tabu(nodos, indices_nodos(solucion_golosa), 10, 7);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// Punto de entrada.                                                         //
-///////////////////////////////////////////////////////////////////////////////
+typedef cmf (*fn_algoritmo)(const vector<nodo> &nodos);
 
 int main() {
-	vector<algoritmo> algoritmos({algoritmo("Goloso", golosa),
-                                  algoritmo("Local",  local_golosa),
-                                  algoritmo("Tabú",   tabu_golosa)});
+	vector<vector<nodo>> grafos_entrenamiento = generar_grafos();
+	vector<pair<vector<nodo>, int>> grafos_testing = cargar_grafos_testing();
 
-	vector<familia> familias({familia("Grafo completo", familia_k),
-	                          familia("Lattice I",      familia_lattice_i),
-	                          familia("Lattice II",     familia_lattice_ii),
-	                          familia("Lattice III",    familia_lattice_iii),
-	                          familia("Lattice IV",     familia_lattice_iv)});
+	vector<pair<string, fn_algoritmo>> algoritmos({
+		make_pair("golosa", golosa),
+		make_pair("local", local_optimizada),
+		make_pair("tabu", tabu_optimizada)});
 
-	for(vector<algoritmo>::iterator algoritmo = algoritmos.begin();
-		algoritmo != algoritmos.end();
-		algoritmo++)
-	for(vector<familia>::iterator familia = familias.begin();
-		familia != familias.end();
-		familia++) {
+	for(size_t i = 0; i < algoritmos.size(); i++) {
 
-		cout << algoritmo->nombre << " / " << familia->nombre << endl;
+		/////////////////////////////
+		// Grafos de entrenamiento //
+		/////////////////////////////
 
-		medidor m(*algoritmo, *familia);
-		familia->fn(m);
+		ofstream csv;
+		csv.open("mediciones/" + algoritmos[i].first + "-entrenamiento.csv");
+
+		for(size_t j = 0; j < grafos_entrenamiento.size(); j++) {
+			cout << algoritmos[i].first << ": grafo de entrenamiento "
+				 << (j + 1) << "/" << grafos_entrenamiento.size() << endl;
+
+		    clock_t tiempo = clock();
+			cmf resultado = algoritmos[i].second(grafos_entrenamiento[j]);
+			tiempo = clock() - tiempo;
+		    double milisegundos = tiempo * 1000.0 / CLOCKS_PER_SEC;
+
+		    csv << milisegundos << ", " << frontera(resultado) << endl;
+		}
+
+		csv.close();
+
+		///////////////////////
+		// Grafos de testing //
+		///////////////////////
+
+		csv.open("mediciones/" + algoritmos[i].first + "-testing.csv");
+
+		for(size_t j = 0; j < grafos_testing.size(); j++) {
+			cout << algoritmos[i].first << ": grafo de testing "
+				 << (j + 1) << "/" << grafos_testing.size() << endl;
+
+		    clock_t tiempo = clock();
+			cmf resultado = algoritmos[i].second(grafos_testing[j].first);
+			tiempo = clock() - tiempo;
+		    double milisegundos = tiempo * 1000.0 / CLOCKS_PER_SEC;
+
+		    csv << milisegundos << ", " << frontera(resultado) << ", " << grafos_testing[j].second << endl;
+		}
+
+		csv.close();
 	}
+
+	//////////////////////////////////////////////
+	// Grafos de entrenamiento: solución exacta //
+	//////////////////////////////////////////////
+
+	ofstream csv;
+	csv.open("mediciones/exacto.csv");
+
+	for(size_t j = 0; j < grafos_entrenamiento.size(); j++) {
+		cout << "exacto: grafo de entrenamiento "
+			 << (j + 1) << "/" << grafos_entrenamiento.size() << endl;
+
+	    clock_t tiempo = clock();
+		cmf resultado = exacto(grafos_entrenamiento[j]);
+		tiempo = clock() - tiempo;
+	    double milisegundos = tiempo * 1000.0 / CLOCKS_PER_SEC;
+
+	    csv << milisegundos << ", " << frontera(resultado) << endl;
+	}
+
+	csv.close();	
 
 	return 0;
 }

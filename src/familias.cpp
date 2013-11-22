@@ -1,5 +1,41 @@
 #include "familias.h"
 
+// Genera los grafos usados para optimizar las heurísticas
+vector<vector<nodo>> generar_grafos() {
+	vector<vector<nodo>> grafos;
+
+	int initial = 2;
+	int max = 11;
+	int increment = 1;
+
+	// Familia lattice
+	for(int m = initial; m <= max; m += increment)
+	for(int n = initial; n <= max; n += increment) {
+		grafos.push_back(lattice(m, n));
+	}
+
+	// Familia (K_n U Claw_m)^c
+	for(int m = initial; m <= max; m += increment)
+	for(int n = initial; n <= max; n += increment) {
+		grafos.push_back(kn_union_claw_m_complemento(m, n));
+	}
+
+	// Familia lollipop
+	for(int m = initial; m <= max; m += increment)
+	for(int n = initial; n <= max; n += increment) {
+		grafos.push_back(lollipop(m, n));
+	}
+
+	// Familia cagaGolosas
+	for(int n = initial; n <= max; n += increment) {
+		grafos.push_back(cagaGolosas(n));
+	}
+
+	return grafos;
+}
+
+
+
 // Genera un grafo completo de n nodos.
 vector<nodo> k(int n) {
 	vector<nodo> nodos(n);
