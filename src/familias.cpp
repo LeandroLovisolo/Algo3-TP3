@@ -26,6 +26,12 @@ vector<vector<nodo>> generar_grafos() {
 		grafos.push_back(lollipop(m, n));
 	}
 
+	// Familia fan
+	for(int m = initial; m <= max; m += increment)
+	for(int n = initial; n <= max; n += increment) {
+		grafos.push_back(fan(m, n));
+	}
+
 	// Familia ninja
 	for(int n = initial; n <= max; n += increment) {
 		grafos.push_back(ninja(n));
