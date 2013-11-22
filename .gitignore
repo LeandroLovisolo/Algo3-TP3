@@ -7,8 +7,8 @@ enunciado.pdf
 /local
 /tabu
 /tests
-/experimentos
-/perf
+/optimizar
+/medir
 
 # Código objeto
 *.o
