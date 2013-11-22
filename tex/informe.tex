@@ -890,7 +890,11 @@ Las siguientes estadísticas sintetizan los resultados anteriores. Se tabulan la
 
 \section{Conclusiones}
 
-Pendiente.
+Observamos que para los grafos estudiados, la heurística de búsqueda local no mejora las soluciones obtenidas con la heurística golosa. Sin embargo, podría ocurrir que la solución sí mejore para otros conjuntos de grafos.
+
+Tanto contra los grafos de entrenamiento como los de testing, notamos una gran mejora en la calidad de las soluciones obtenidas por medio de la heurística de búsqueda tabú comparando con las heurística golosa y de búsqueda local, pero a cambio de un tiempo de ejecución mucho más grande. Para el caso de los grafos de testing, la diferencia media entre el tamaño de frontera exacto y el devuelto por la heurística tabú es aproximadamente el 50\% de la diferencia entre el tamaño de frontera exacto y el devuelto por cualquiera de las otras dos heurísticas. Sin embargo esta mejora se paga con un tiempo de ejecución 4 veces más grande.
+
+Finalmente destacamos la importancia de optimizar los parámetros de las heurísticas para el problema sobre el que se está trabajando. Mientras que la heurística de búsqueda tabú alcanza una solución que dista el 50\% de la solución exacta comparado a las otras heurísticas para el caso de los grafos de testing, ésta diferencia es de tan sólo el 16\% para el caso de los grafos de entrenamiento, para los cuales la heurística fue optimizada. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
