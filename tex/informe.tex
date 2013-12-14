@@ -256,11 +256,13 @@ Utilizando el algoritmo de CFM es posible determinar que plantas seran las ideal
 
 \section{Algoritmo exacto}
 \subsection{Algoritmo}
-Para la implementación del algoritmo exacto utilizamos la técnica de backtracking que puede verse a continuación.
+Para la implementación del algoritmo exacto utilizamos la técnica de backtracking.
+
+El algoritmo construye el conjunto de partes de nodos basándose en la posibilidad de agregar un elemento dado al conjunto solo si puede ser parte del clique (poda) y en caso de que pudiera serlo, en llamadas recurivas, comparando si se consigue una mejor frontera agregándolo o no.
 
 \begin{pseudo}
 \State \textbf{indice\_nodo} es int
-\State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjuto$<$indice\_nodo$>$ adyacentes$>$
+\State \textbf{nodo} es tupla $<$ indice\_nodo indice, conjunto$<$indice\_nodo$>$ adyacentes$>$
 \State \textbf{cmf} es par$<$frontera : int, indices\_nodos : vector de indice\_nodo$>$
 \State
 \Procedure{exacto}{\&nodos : vector de nodo} $\rightarrow$ cmf
@@ -301,7 +303,10 @@ Para la implementación del algoritmo exacto utilizamos la técnica de backtrack
 \end{pseudo}
 
 \subsection{Complejidad}
-Sea N la cantidad de nodos del grafo, el algoritmo construye el conjunto de partes de nodos basándose en la posibilidad de agregar un elemento dado al conjunto solo si puede ser parte del clique y en caso de que pudiera serlo, en llamadas recurivas, comparando si se consigue una mejor frontera agregándolo o no. Para el cálculo de pertenencia al clique se obtiene una complejidad de O($N * log N$), para calcular el cardinal de la frontera O($N$) y realizar las copias de vectores para mantener la clique cantidata se realizan también en O($N$). La complejidad de estas operaciones termina siendo O($N * log N$). Como el algoritmo tiene 2 ramas para seguir (agregar el elemento al conjunto o no), la complejidad final del algoritmo es O($2^{N * log N}$).
+Llamamos N a la cantidad de nodos del grafo. Utilizamos las estructuras \textbf{vector} de la STL de C++ y Nodo descripta en la sección de funciones comunes. La estructura vector nos permite realizar copiar en O($N$) y agregar elementos en O($1$).
+Para el cálculo de pertenencia al clique se obtiene una complejidad de O($N * log N$), para calcular el cardinal de la frontera O($N$) y realizar las copias de vectores para mantener la clique cantidata se realizan también en O($N$). La complejidad de estas operaciones termina siendo O($N * log N$).
+
+Como el algoritmo tiene 2 ramas para seguir (agregar el elemento al conjunto o no), de costo O($N * log N$) como vimos anteriormente, la complejidad final del algoritmo es O($2^N * N * log N$).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Heurística contructiva golosa                                             %%
