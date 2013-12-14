@@ -1,23 +1,50 @@
+\subsection{Nodo}
+Nodo es una estructura que contine lo siguiente:
+\begin{itemize}
+\item indice\_nodo : entero
+\item adyacentes : conjunto de indice\_nodo
+\end{itemize}
+El conjunto de índices está representado por la estructura \textbf{set} de la STL de C++.
+
 \subsection{estaEnLaClique}
+estaEnLaClique(clique : vector de indice\_nodo, nodo : indice\_nodo)
+
 Realiza una búsqueda lineal sobre los elementos de la clique, y devuelve $true$ si se halló en ésta el nodo recibido como parámetro, o $false$ en caso contrario.
+El vector de cliques corresponde a la estructura \textbf{vector} de la STL C++.
 
 Complejidad: O(n).
 
 \subsection{sonAdyacentes}
+sonAdyacentes(m : nodo, n : nodo)
+
 Dados 2 nodos $u$ y $v$, la funcion devuelve verdadero si el nodo $v$ pertenece al conjunto de adyacencias de $u$.
+Se utiliza la función \textit{find()} de la estructura \textbf{set} para verificar la pertenecencia del nodo en su \textbf{set} de adyacentes.
 
 Complejidad: O(log(n)).
 
 \subsection{agregandoSigueSiendoClique}
+agregandoSigueSiendoClique(nodos : vector de nodo, clique : vector de indice\_nodo, nodo : indice\_nodo)
+
 AgregandoSigueSiendoClique devuelve $true$ si para todos los elementos del clique, el nodo $v$ a agregar pertenece a su conjunto de adyacencia. Devuelve $false$ en caso contrario.
+Se recorren los elementos del vector de índices de la clique y se utiliza la función \textbf{sonAdyacentes} para verificar que el nodo a agregar sea adyacente con todos los elementos del vector.
+El vector utilizado corresponde a la estructura \textbf{vector} de la STL de C++.
+
 Complejidad: O(n log(n)).
 
 \subsection{intercambiandoSigueSiendoClique}
+intercambiandoSigueSiendoClique(nodos : vector de nodo, clique : vector de indice\_nodo>, nodoViejo : indice\_nodo, nodoNuevo : indice\_nodo)
+
 IntercambiandoSigueSiendoClique devuelve $true$ si para todos los elementos del clique (excepto el que se va a cambiar), el nodo $v$ a intercambiar pertenece a su conjunto de adyacencia. Devuelve $false$ en caso contrario.
+Se recorren los elementos del vector de índices de la clique y se utiliza la función \textbf{sonAdyacentes} para verificar que el nodo a intercambiar sea adyacente con todos los elementos del vector excepto por el cual se intercambiará.
+Los vectores corresponden a la estructura \textbf{vector} de la STL C++.
 
 Complejidad: O(n log(n)).
 
 \subsection{cardinalFrontera}
+cardinalFrontera(nodos : vector de nodo, clique : vector de indice\_nodo)
+
 Dado una clique devuelve el tamaño de la frontera.
+Recorre todo el vector de nodos consiguiendo el tamaño de el \textbf{set} de adyacentes de cada nodo para luego calcular su tamaño
+El vectore corresponde a la estructura \textbf{vector} de la STL C++.
 
 Complejidad: O(n).
