@@ -303,10 +303,10 @@ El algoritmo construye el conjunto de partes de nodos basándose en la posibilid
 \end{pseudo}
 
 \subsection{Complejidad}
-Llamamos N a la cantidad de nodos del grafo. Utilizamos las estructuras \textbf{vector} de la STL de C++ y Nodo descripta en la sección de funciones comunes. La estructura vector nos permite realizar copiar en O($N$) y agregar elementos en O($1$).
-Para el cálculo de pertenencia al clique se obtiene una complejidad de O($N * log N$), para calcular el cardinal de la frontera O($N$) y realizar las copias de vectores para mantener la clique cantidata se realizan también en O($N$). La complejidad de estas operaciones termina siendo O($N * log N$).
+Llamamos N a la cantidad de nodos del grafo. Utilizamos las estructuras \textbf{vector} de la STL de C++ y Nodo descripta en la sección de funciones comunes. La estructura vector nos permite realizar copias en O($N$) y agregar elementos en O($1$).
+Para el cálculo de pertenencia al clique se obtiene una complejidad de O($N * log N$), para calcular el cardinal de la frontera O($N$) y realizar las copias de vectores para mantener la clique cantidata se realizan también en O($N$). Esto se repite como máximo $N$ veces, por lo tanto la complejidad de estas operaciones resulta O($N^2 * log N$).
 
-Como el algoritmo tiene 2 ramas para seguir (agregar el elemento al conjunto o no), de costo O($N * log N$) como vimos anteriormente, la complejidad final del algoritmo es O($2^N * N * log N$).
+Como el algoritmo tiene 2 ramas para seguir (agregar el elemento al conjunto o no), de costo O($N^2 * log N$) como vimos anteriormente, la complejidad final del algoritmo es O($2^N * N^2 * log N$).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Heurística contructiva golosa                                             %%
